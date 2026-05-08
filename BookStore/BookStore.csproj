@@ -21,17 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Middleware\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Mappings\" />
     <Folder Include="Common\" />
     <Folder Include="logs\" />
-    <Folder Include="Validators\" />
-    <Folder Include="Repositories\Interfaces\" />
-    <Folder Include="Repositories\Implementations\" />
-    <Folder Include="Services\Interfaces\" />
-    <Folder Include="Services\Implementations\" />
   </ItemGroup>
 
 </Project>
