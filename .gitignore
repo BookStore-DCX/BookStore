@@ -1,0 +1,37 @@
+## Visual Studio Specific
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.vstoken
+
+## Specialized Visual Studio files
+out/
+IPCH/
+DetailedResults/
+$tf/
+
+## Testing and Code Coverage
+TestResults/
+*.sequenced
+*.coverage
+*.coveragexml
+
+## Node/Frontend (if applicable)
+node_modules/
+dist/
+
+## OS Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+## Environment/Secrets (Never push these!)
+.env
+.env.*
+appsettings.json
+appsettings.*.json
