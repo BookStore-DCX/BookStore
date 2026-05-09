@@ -317,7 +317,7 @@ public partial class BookContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false);
             entity.Property(e => e.Password)
-                .HasMaxLength(30)
+                .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(14)

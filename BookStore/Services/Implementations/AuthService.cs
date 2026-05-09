@@ -25,12 +25,12 @@ namespace BookStore.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
+        public async Task<AuthResponseDto?> LoginAsync(LoginDto dto)
         {
             var user = await _authRepo.ValidateUserAsync(dto.UserName, dto.Password);
             if (user == null)
             {
-                throw new UnauthorizedException("Invalid username or password");
+                return null;
             }
 
                 return new AuthResponseDto
@@ -46,11 +46,13 @@ namespace BookStore.Services.Implementations
         {
             if (await _authRepo.UserExistsAsync(dto.UserName))
             {
-                throw new ConflictException($"Username '{dto.UserName}' already exists");
+                return null;     
             }
 
             var user = _mapper.Map<User>(dto);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
             user.RoleNumber = 1;
+
             await _userRepo.AddAsync(user);
             await _uow.SaveChangesAsync();
 

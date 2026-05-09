@@ -15,9 +15,21 @@ namespace BookStore.Repositories.Implementations
         }
         public async Task<User?> ValidateUserAsync(string userName, string password)
         {
-            return await _context.Users
-           .Include(u => u.RoleNumberNavigation)
-           .FirstOrDefaultAsync(u => u.UserName == userName && u.Password == password);
+            var user = await _context.Users
+                .Include(u => u.RoleNumberNavigation)
+                .FirstOrDefaultAsync(u => u.UserName == userName);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (user.Password.StartsWith("$2a$") || user.Password.StartsWith("$2b$") || user.Password.StartsWith("$2y$"))
+            {
+                return BCrypt.Net.BCrypt.Verify(password, user.Password) ? user : null;
+            }
+
+            return user.Password == password ? user : null;
         }
         public async Task<bool> UserExistsAsync(string userName)
         {

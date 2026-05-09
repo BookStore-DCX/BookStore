@@ -4,7 +4,7 @@ namespace BookStore.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<AuthResponseDto> LoginAsync(LoginDto dto);
-        Task<UserResponseDto> RegisterAsync(RegisterDto dto);
+        Task<AuthResponseDto?> LoginAsync(LoginDto dto);
+        Task<UserResponseDto?> RegisterAsync(RegisterDto dto);
     }
 }
