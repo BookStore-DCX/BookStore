@@ -1,6 +1,6 @@
 # BookStore
 
-## 🛠️ Local Configuration
+## Local Configuration
 
 Since the `appsettings.json` file is ignored by Git to keep credentials secure, you must create it manually to run the project locally.
 
@@ -31,3 +31,33 @@ Since the `appsettings.json` file is ignored by Git to keep credentials secure, 
     "ExpiryMinutes": 30
   }
 }
+
+```
+
+---
+
+## Password Hashing Update
+
+This project uses `BCrypt.Net-Next` for password hashing, so you must update the password column size before running the project.
+
+### Run this SQL query
+
+```sql
+ALTER TABLE [book].[dbo].[user]
+ALTER COLUMN [Password] VARCHAR(255);
+
+```
+
+### Update `BookContext`
+
+Change the password property configuration to:
+
+```csharp
+entity.Property(e => e.Password)
+    .HasMaxLength(255)
+    .IsUnicode(false);
+```
+
+---
+
+- No additional migrations are required for this change.
