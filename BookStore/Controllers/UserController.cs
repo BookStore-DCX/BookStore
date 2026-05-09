@@ -15,9 +15,7 @@ namespace BookStore.Controllers
             _userService = userService;
         }
 
-        /// <summary>
-        /// Get all users
-        /// </summary>
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetAllUsers()
         {
@@ -25,9 +23,7 @@ namespace BookStore.Controllers
             return Ok(result);
         }
 
-        /// <summary>
-        /// Get user by ID
-        /// </summary>
+
         [HttpGet("{id:int}")]
         public async Task<ActionResult<UserResponseDto>> GetUserById(int id)
         {
@@ -41,6 +37,7 @@ namespace BookStore.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
 
         [HttpGet("username/{username}")]
         public async Task<ActionResult<UserResponseDto>> GetUserByUsername(string username)
@@ -56,19 +53,13 @@ namespace BookStore.Controllers
             }
         }
 
-        /// <summary>
-        /// Get users by role number
-        /// </summary>
+
         [HttpGet("role/{roleNumber:int}")]
         public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetUsersByRole(int roleNumber)
         {
             var result = await _userService.GetUsersByRoleAsync(roleNumber);
             return Ok(result);
         }
-
-        /// <summary>
-        /// Update user information
-        /// </summary>
         [HttpPut("{id:int}")]
         public async Task<ActionResult<UserResponseDto>> UpdateUser(int id, [FromBody] UserUpdateDto dto)
         {
@@ -83,9 +74,7 @@ namespace BookStore.Controllers
             }
         }
 
-        /// <summary>
-        /// Delete user
-        /// </summary>
+
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteUser(int id)
         {

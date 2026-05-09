@@ -1,6 +1,9 @@
-﻿namespace BookStore.Services.Interfaces
+﻿using BookStore.Models;
+
+namespace BookStore.Services.Interfaces
 {
-    public class IJWTService
+    public interface IJwtService
     {
+        string GenerateToken(User user);
     }
 }

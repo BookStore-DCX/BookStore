@@ -1,6 +1,60 @@
-﻿namespace BookStore.Services.Implementations
+﻿using AutoMapper;
+using BookStore.DTOs.Auth;
+using BookStore.DTOs.User;
+using BookStore.Exceptions;
+using BookStore.Models;
+using BookStore.Repositories.Interfaces;
+using BookStore.Services.Interfaces;
+
+namespace BookStore.Services.Implementations
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
+        private readonly IAuthRepository _authRepo;
+        private readonly IUserRepository _userRepo;
+        private readonly IUnitOfWork _uow;
+        private readonly IJwtService _jwt;
+        private readonly IMapper _mapper;
+
+        public AuthService(IAuthRepository authRepo, IUserRepository userRepo, IUnitOfWork uow, IJwtService jwt, IMapper mapper)
+        {
+            _authRepo = authRepo;
+            _userRepo = userRepo;
+            _uow = uow;
+            _jwt = jwt;
+            _mapper = mapper;
+        }
+
+        public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
+        {
+            var user = await _authRepo.ValidateUserAsync(dto.UserName, dto.Password);
+            if (user == null)
+            {
+                throw new UnauthorizedException("Invalid username or password");
+            }
+
+                return new AuthResponseDto
+            {
+                Token = _jwt.GenerateToken(user),
+                UserName = user.UserName,
+                Role = user.RoleNumberNavigation?.PermRole1 ?? "Guest",
+                Expiry = DateTime.UtcNow.AddMinutes(60)
+            };
+        }
+
+        public async Task<UserResponseDto> RegisterAsync(RegisterDto dto)
+        {
+            if (await _authRepo.UserExistsAsync(dto.UserName))
+            {
+                throw new ConflictException($"Username '{dto.UserName}' already exists");
+            }
+
+            var user = _mapper.Map<User>(dto);
+            user.RoleNumber = 1;
+            await _userRepo.AddAsync(user);
+            await _uow.SaveChangesAsync();
+
+            return _mapper.Map<UserResponseDto>(user);
+        }
     }
 }

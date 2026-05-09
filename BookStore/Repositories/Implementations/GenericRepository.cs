@@ -17,13 +17,20 @@ namespace BookStore.Repositories.Implementations
         }
 
         public virtual async Task<IEnumerable<T>> GetAllAsync()
-            => await _dbSet.AsNoTracking().ToListAsync();
+        {
+            return await _dbSet.AsNoTracking().ToListAsync();
+        }
+            
 
         public virtual async Task<T?> GetByIdAsync(params object[] id)
-            => await _dbSet.FindAsync(id);
+        {
+            return await _dbSet.FindAsync(id);
+        }
 
         public virtual async Task AddAsync(T entity)
-            => await _dbSet.AddAsync(entity);
+        {
+            await _dbSet.AddAsync(entity);
+        }
 
         public virtual Task UpdateAsync(T entity)
         {
@@ -41,6 +48,8 @@ namespace BookStore.Repositories.Implementations
         }
 
         public virtual async Task<bool> ExistsAsync(params object[] id)
-            => await GetByIdAsync(id) != null;
+        {
+            return await GetByIdAsync(id) != null;
+        }
     }
 }

@@ -1,12 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BookStore.Common;
+using BookStore.DTOs.Auth;
+using BookStore.DTOs.User;
+using BookStore.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
 {
+
+    [ApiController]
+    [Route("api/[controller]")]
     public class AuthController : Controller
     {
-        public IActionResult Index()
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService) => _authService = authService;
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
-            return View();
+            var result = await _authService.LoginAsync(dto);
+            return Ok(ApiResponse<AuthResponseDto>.Ok(result, "Login successful"));
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto dto)
+        {
+            var result = await _authService.RegisterAsync(dto);
+            return CreatedAtAction(nameof(Register), ApiResponse<UserResponseDto>.Created(result));
         }
     }
 }
