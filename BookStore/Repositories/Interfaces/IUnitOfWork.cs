@@ -1,6 +1,8 @@
 ﻿namespace BookStore.Repositories.Interfaces
 {
-    public class IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
+        IUserRepository Users { get; }
+        Task<int> SaveChangesAsync();
     }
 }

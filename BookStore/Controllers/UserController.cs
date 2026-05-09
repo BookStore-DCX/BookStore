@@ -1,12 +1,103 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BookStore.DTOs.User;
+using BookStore.Services.Interfaces;
+    using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
 {
-    public class UserController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UserController : ControllerBase
     {
-        public IActionResult Index()
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
         {
-            return View();
+            _userService = userService;
+        }
+
+        /// <summary>
+        /// Get all users
+        /// </summary>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetAllUsers()
+        {
+            var result = await _userService.GetAllUsersAsync();
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Get user by ID
+        /// </summary>
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<UserResponseDto>> GetUserById(int id)
+        {
+            try
+            {
+                var result = await _userService.GetUserByIdAsync(id);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("username/{username}")]
+        public async Task<ActionResult<UserResponseDto>> GetUserByUsername(string username)
+        {
+            try
+            {
+                var result = await _userService.GetUserByUsernameAsync(username);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Get users by role number
+        /// </summary>
+        [HttpGet("role/{roleNumber:int}")]
+        public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetUsersByRole(int roleNumber)
+        {
+            var result = await _userService.GetUsersByRoleAsync(roleNumber);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Update user information
+        /// </summary>
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<UserResponseDto>> UpdateUser(int id, [FromBody] UserUpdateDto dto)
+        {
+            try
+            {
+                var result = await _userService.UpdateUserAsync(id, dto);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Delete user
+        /// </summary>
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            try
+            {
+                var result = await _userService.DeleteUserAsync(id);
+                return Ok(new { success = result });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
     }
 }

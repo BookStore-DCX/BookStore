@@ -1,4 +1,10 @@
+using AutoMapper;
 using BookStore.Data;
+using BookStore.Mappings;
+using BookStore.Repositories.Implementations;
+using BookStore.Repositories.Interfaces;
+using BookStore.Services.Implementations;
+using BookStore.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore
@@ -18,6 +24,24 @@ namespace BookStore
 
             builder.Services.AddDbContext<BookContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            var mapperConfig = new MapperConfiguration(config =>
+            {
+                config.AddProfile<MappingProfile>();
+            });
+            builder.Services.AddSingleton(mapperConfig.CreateMapper());
+
+            //builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+
+            //builder.Services.AddScoped<IJwtService, JwtService>();
+            //builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
 
