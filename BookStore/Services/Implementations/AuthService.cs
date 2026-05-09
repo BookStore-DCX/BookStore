@@ -42,7 +42,7 @@ namespace BookStore.Services.Implementations
             };
         }
 
-        public async Task<UserResponseDto> RegisterAsync(RegisterDto dto)
+        public async Task<UserDto> RegisterAsync(RegisterDto dto)
         {
             if (await _authRepo.UserExistsAsync(dto.UserName))
             {
@@ -56,7 +56,7 @@ namespace BookStore.Services.Implementations
             await _userRepo.AddAsync(user);
             await _uow.SaveChangesAsync();
 
-            return _mapper.Map<UserResponseDto>(user);
+            return _mapper.Map<UserDto>(user);
         }
     }
 }

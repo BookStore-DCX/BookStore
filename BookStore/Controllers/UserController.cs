@@ -17,7 +17,7 @@ namespace BookStore.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
         {
             var result = await _userService.GetAllUsersAsync();
             return Ok(result);
@@ -25,7 +25,7 @@ namespace BookStore.Controllers
 
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<UserResponseDto>> GetUserById(int id)
+        public async Task<ActionResult<UserDto>> GetUserById(int id)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace BookStore.Controllers
 
 
         [HttpGet("username/{username}")]
-        public async Task<ActionResult<UserResponseDto>> GetUserByUsername(string username)
+        public async Task<ActionResult<UserDto>> GetUserByUsername(string username)
         {
             try
             {
@@ -55,13 +55,13 @@ namespace BookStore.Controllers
 
 
         [HttpGet("role/{roleNumber:int}")]
-        public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetUsersByRole(int roleNumber)
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersByRole(int roleNumber)
         {
             var result = await _userService.GetUsersByRoleAsync(roleNumber);
             return Ok(result);
         }
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<UserResponseDto>> UpdateUser(int id, [FromBody] UserUpdateDto dto)
+        public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] UserUpdateDto dto)
         {
             try
             {

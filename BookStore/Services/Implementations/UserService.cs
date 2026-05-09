@@ -18,21 +18,21 @@ namespace BookStore.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
             var users = await _uow.Users.GetAllAsync();
 
-            return _mapper.Map<IEnumerable<UserResponseDto>>(users);
+            return _mapper.Map<IEnumerable<UserDto>>(users);
         }
-        public async Task<UserResponseDto> GetUserByIdAsync(int userId)
+        public async Task<UserDto> GetUserByIdAsync(int userId)
         {
             var user = await _uow.Users.GetByIdAsync(userId);
             if (user == null)
                 throw new KeyNotFoundException($"User with ID {userId} not found");
 
-            return _mapper.Map<UserResponseDto>(user);
+            return _mapper.Map<UserDto>(user);
         }
-        public async Task<UserResponseDto> GetUserByUsernameAsync(string username)
+        public async Task<UserDto> GetUserByUsernameAsync(string username)
         {
             var user = await _uow.Users.GetUserByUsernameAsync(username);
             if (user == null)
@@ -40,10 +40,10 @@ namespace BookStore.Services.Implementations
                 throw new KeyNotFoundException($"User '{username}' not found");
             }
 
-            return _mapper.Map<UserResponseDto>(user);
+            return _mapper.Map<UserDto>(user);
         }
 
-        public async Task<UserResponseDto> UpdateUserAsync(int userId, UserUpdateDto dto)
+        public async Task<UserDto> UpdateUserAsync(int userId, UserUpdateDto dto)
         {
             var user = await _uow.Users.GetByIdAsync(userId);
             if (user == null)
@@ -54,7 +54,7 @@ namespace BookStore.Services.Implementations
             await _uow.Users.UpdateAsync(user);
             await _uow.SaveChangesAsync();
 
-            return _mapper.Map<UserResponseDto>(user);
+            return _mapper.Map<UserDto>(user);
         }
 
         public async Task<bool> DeleteUserAsync(int userId)
@@ -68,13 +68,13 @@ namespace BookStore.Services.Implementations
             return true;
         }
 
-        public async Task<IEnumerable<UserResponseDto>> GetUsersByRoleAsync(int roleNumber)
+        public async Task<IEnumerable<UserDto>> GetUsersByRoleAsync(int roleNumber)
         {
             var users = await _uow.Users.GetUsersByRoleAsync(roleNumber);
             //if (!users.Any())
             //    throw new KeyNotFoundException($"No users found for role {roleNumber}");
 
-            return _mapper.Map<IEnumerable<UserResponseDto>>(users);
+            return _mapper.Map<IEnumerable<UserDto>>(users);
 
         }
     }

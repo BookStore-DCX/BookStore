@@ -10,7 +10,7 @@ namespace BookStore.Mappings
         public MappingProfile()
         {
             CreateMap<RegisterDto, User>();
-            CreateMap<User, UserResponseDto>()
+            CreateMap<User, UserDto>()
                 .ForMember(d => d.RoleName, o => o.MapFrom(s => s.RoleNumberNavigation != null ? s.RoleNumberNavigation.PermRole1 : null));
             CreateMap<UserUpdateDto, User>();
 

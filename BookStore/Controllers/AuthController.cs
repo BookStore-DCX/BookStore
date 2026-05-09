@@ -35,7 +35,7 @@ namespace BookStore.Controllers
                 return Conflict(ApiResponse<string>.Fail($"Username '{dto.UserName}' already exists"));
             }
 
-            return CreatedAtAction(nameof(Register), ApiResponse<UserResponseDto>.Created(result));
+            return CreatedAtAction(nameof(Register), ApiResponse<UserDto>.Created(result));
         }
     }
 }

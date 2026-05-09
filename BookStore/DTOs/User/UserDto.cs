@@ -1,6 +1,6 @@
 namespace BookStore.DTOs.User
 {
-    public class UserResponseDto
+    public class UserDto
     {
         public int UserId { get; set; }
         public string FirstName { get; set; } = string.Empty;
