@@ -79,13 +79,11 @@ public partial class BookContext : DbContext
             entity.Property(e => e.Isbn)
                 .HasMaxLength(13)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("ISBN");
             entity.Property(e => e.Description).HasMaxLength(100);
             entity.Property(e => e.Edition)
                 .HasMaxLength(30)
-                .IsUnicode(false)
-                .IsFixedLength();
+                                                .IsUnicode(false);
             entity.Property(e => e.PublisherId).HasColumnName("PublisherID");
             entity.Property(e => e.Title).HasMaxLength(70);
 
@@ -110,13 +108,11 @@ public partial class BookContext : DbContext
             entity.Property(e => e.Isbn)
                 .HasMaxLength(13)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("ISBN");
             entity.Property(e => e.AuthorId).HasColumnName("AuthorID");
             entity.Property(e => e.PrimaryAuthor)
                 .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength();
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Author).WithMany(p => p.Bookauthors)
                 .HasForeignKey(d => d.AuthorId)
@@ -154,7 +150,6 @@ public partial class BookContext : DbContext
             entity.Property(e => e.Isbn)
                 .HasMaxLength(13)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("ISBN");
             entity.Property(e => e.ReviewerId).HasColumnName("ReviewerID");
             entity.Property(e => e.Comments).HasMaxLength(255);
@@ -192,7 +187,6 @@ public partial class BookContext : DbContext
             entity.Property(e => e.Isbn)
                 .HasMaxLength(13)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("ISBN");
             entity.Property(e => e.Purchased).HasDefaultValue((byte)0);
 
@@ -235,8 +229,7 @@ public partial class BookContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.StateCode)
                 .HasMaxLength(2)
-                .IsUnicode(false)
-                .IsFixedLength();
+                .IsUnicode(false);
 
             entity.HasOne(d => d.StateCodeNavigation).WithMany(p => p.Publishers)
                 .HasForeignKey(d => d.StateCode)
@@ -281,7 +274,6 @@ public partial class BookContext : DbContext
             entity.Property(e => e.Isbn)
                 .HasMaxLength(13)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("ISBN");
 
             entity.HasOne(d => d.IsbnNavigation).WithMany(p => p.Shoppingcarts)
@@ -298,8 +290,7 @@ public partial class BookContext : DbContext
 
             entity.Property(e => e.StateCode)
                 .HasMaxLength(2)
-                .IsUnicode(false)
-                .IsFixedLength();
+                .IsUnicode(false);
             entity.Property(e => e.StateName).HasMaxLength(50);
         });
 
@@ -321,8 +312,7 @@ public partial class BookContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength();
+                .IsUnicode(false);
             entity.Property(e => e.RoleNumber).HasDefaultValue(1);
             entity.Property(e => e.UserName)
                 .HasMaxLength(30)
