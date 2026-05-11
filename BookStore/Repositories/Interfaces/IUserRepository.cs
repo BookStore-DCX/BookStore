@@ -6,5 +6,6 @@ namespace BookStore.Repositories.Interfaces
     {
         Task<User?> GetUserByUsernameAsync(string username);
         Task<IEnumerable<User>> GetUsersByRoleAsync(int roleNumber);
+        Task<bool> RoleExistsAsync(int roleNumber);
     }
 }

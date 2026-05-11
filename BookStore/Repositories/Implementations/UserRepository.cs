@@ -28,7 +28,7 @@ namespace BookStore.Repositories.Implementations
                 .FirstOrDefaultAsync(u => u.UserId == userId);
         }
         public async Task<User?> GetUserByUsernameAsync(string username)
-        {   
+        {
             return await _dbSet
                 .Include(u => u.RoleNumberNavigation)
                 .FirstOrDefaultAsync(u => u.UserName == username);
@@ -41,5 +41,10 @@ namespace BookStore.Repositories.Implementations
                 .Where(u => u.RoleNumber == roleNumber)
                 .ToListAsync();
         }
+        public async Task<bool> RoleExistsAsync(int roleNumber)
+        {
+            return await _context.Permroles.AnyAsync(r => r.RoleNumber == roleNumber);
+        }
     }
+
 }

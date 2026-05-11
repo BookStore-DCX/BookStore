@@ -49,7 +49,14 @@ namespace BookStore.Services.Implementations
             if (user == null)
                 throw new KeyNotFoundException($"User with ID {userId} not found");
 
-            _mapper.Map(dto, user); 
+            _mapper.Map(dto, user);
+
+            if (dto.RoleNumber.HasValue)
+            {
+                var roleExists = await _uow.Users.RoleExistsAsync(dto.RoleNumber.Value);
+                if (!roleExists)
+                    throw new KeyNotFoundException($"Role number {dto.RoleNumber.Value} not found");
+            }
 
             await _uow.Users.UpdateAsync(user);
             await _uow.SaveChangesAsync();
