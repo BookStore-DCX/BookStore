@@ -465,3 +465,32 @@ FROM [book] AS [b]
 2026-05-11 14:07:34.305 +05:30 [INF] Executed action BookController.GetAll (BookStore) in 338.5066ms
 2026-05-11 14:07:34.310 +05:30 [INF] Executed endpoint 'BookController.GetAll (BookStore)'
 2026-05-11 14:07:34.314 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/api/Book - 200 null application/json; charset=utf-8 399.7911ms
+2026-05-11 14:13:16.073 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7243/api/Author - application/json 68
+2026-05-11 14:13:16.135 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin|StoreOwner)
+2026-05-11 14:13:16.158 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-11 14:13:16.161 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7243/api/Author - 401 0 null 147.1316ms
+2026-05-11 14:58:29.860 +05:30 [INF] Now listening on: https://localhost:7243
+2026-05-11 14:58:29.930 +05:30 [INF] Now listening on: http://localhost:5157
+2026-05-11 14:58:30.191 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-11 14:58:30.194 +05:30 [INF] Hosting environment: Development
+2026-05-11 14:58:30.195 +05:30 [INF] Content root path: C:\Capgemini_CU_sec3_.netWithAzure_RaghviSharma\ProjectGroup3_BookStore\BookStore
+2026-05-11 14:58:31.340 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/swagger/index.html - null null
+2026-05-11 14:58:32.012 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/swagger/index.html - 200 null text/html;charset=utf-8 689.8617ms
+2026-05-11 14:58:32.045 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/_vs/browserLink - null null
+2026-05-11 14:58:32.045 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-11 14:58:32.132 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/_framework/aspnetcore-browser-refresh.js - 200 16503 application/javascript; charset=utf-8 87.487ms
+2026-05-11 14:58:32.205 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/_vs/browserLink - 200 null text/javascript; charset=UTF-8 159.227ms
+2026-05-11 14:58:32.307 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/swagger/v1/swagger.json - null null
+2026-05-11 14:58:32.603 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 296.3652ms
+2026-05-11 14:58:41.320 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/api/Author - null null
+2026-05-11 14:58:41.459 +05:30 [INF] Executing endpoint 'AuthorController.GetAll (BookStore)'
+2026-05-11 14:58:41.498 +05:30 [INF] Route matched with {action = "GetAll", controller = "Author"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAll() on controller AuthorController (BookStore).
+2026-05-11 14:58:45.512 +05:30 [INF] Executed DbCommand (81ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[authorID], [a].[FirstName], [a].[LastName], [a].[Photo]
+FROM [author] AS [a]
+2026-05-11 14:58:45.576 +05:30 [INF] Executing OkObjectResult, writing value of type 'BookStore.Common.ApiResponse`1[[System.Collections.Generic.IEnumerable`1[[BookStore.DTOs.Author.AuthorDto, BookStore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-05-11 14:58:45.593 +05:30 [INF] Executed action AuthorController.GetAll (BookStore) in 4086.8024ms
+2026-05-11 14:58:45.596 +05:30 [INF] Executed endpoint 'AuthorController.GetAll (BookStore)'
+2026-05-11 14:58:45.608 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/api/Author - 200 null application/json; charset=utf-8 4288.7152ms

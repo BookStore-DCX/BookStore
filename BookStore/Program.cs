@@ -7,6 +7,8 @@ using BookStore.Repositories.Implementations;
 using BookStore.Repositories.Interfaces;
 using BookStore.Services.Implementations;
 using BookStore.Services.Interfaces;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +46,9 @@ builder.Services.AddDbContext<BookContext>(options =>
 		builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddFluentValidationAutoValidation();
+
 
 builder.Services.AddControllers();
 
