@@ -1,19 +1,15 @@
 ﻿using AutoMapper;
-using BookStore.Models;
 using BookStore.Common;
 using BookStore.DTOs.Publisher;
-using BookStore.Exceptions;
 using BookStore.Models;
 using BookStore.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using BookStore.Repositories.Interfaces;
 
 namespace BookStore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class PublisherController : ControllerBase
     {
         private readonly IUnitOfWork _uow;
@@ -26,7 +22,6 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             var pubs = await _uow.Publishers.GetAllAsync();
@@ -39,15 +34,22 @@ namespace BookStore.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetById(int id)
         {
-            var p = await _uow.Publishers.GetByIdAsync(id)
-                    ?? throw new NotFoundException($"Publisher {id} not found");
+            var publisher = await _uow.Publishers.GetByIdAsync(id);
+
+            if (publisher == null)
+            {
+                return NotFound(
+                    ApiResponse<string>.Fail(
+                        $"No publisher exists with ID {id}."
+                    )
+                );
+            }
 
             return Ok(
                 ApiResponse<PublisherDto>.Ok(
-                    _mapper.Map<PublisherDto>(p)
+                    _mapper.Map<PublisherDto>(publisher)
                 )
             );
         }
@@ -57,6 +59,15 @@ namespace BookStore.Controllers
         {
             var pubs = await _uow.Publishers.GetPublishersByStateAsync(stateCode);
 
+            if (!pubs.Any())
+            {
+                return NotFound(
+                    ApiResponse<string>.Fail(
+                        $"No publishers found for state code '{stateCode}'."
+                    )
+                );
+            }
+
             return Ok(
                 ApiResponse<IEnumerable<PublisherDto>>.Ok(
                     _mapper.Map<IEnumerable<PublisherDto>>(pubs)
@@ -65,7 +76,6 @@ namespace BookStore.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "StoreOwner")]
         public async Task<IActionResult> Create([FromBody] PublisherCreateDto dto)
         {
             var pub = _mapper.Map<Publisher>(dto);

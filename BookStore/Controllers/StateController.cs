@@ -3,7 +3,6 @@ using BookStore.Common;
 using BookStore.DTOs;
 using BookStore.DTOs.State;
 using BookStore.Repositories.Interfaces;
- 
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
@@ -39,7 +38,9 @@ namespace BookStore.Controllers
             if (state == null)
             {
                 return NotFound(
-                    ApiResponse<string>.Fail($"State with code {stateCode} not found")
+                    ApiResponse<string>.Fail(
+                        $"No state exists with code '{stateCode}'."
+                    )
                 );
             }
 

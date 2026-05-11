@@ -39,7 +39,8 @@ namespace BookStore.Controllers
 
             if (category == null)
             {
-                throw new NotFoundException($"Category {id} not found");
+                return NotFound(
+         ApiResponse<string>.Fail($"No category exists with ID {id}."));
             }
 
             var result = _mapper.Map<CategoryDto>(category);
