@@ -1,4 +1,5 @@
-﻿using BookStore.DTOs.User;
+﻿using BookStore.Common;
+using BookStore.DTOs.User;
 using BookStore.Services.Interfaces;
     using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,7 @@ namespace BookStore.Controllers
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
         {
             var result = await _userService.GetAllUsersAsync();
-            return Ok(result);
+            return Ok(ApiResponse<IEnumerable<UserDto>>.Ok(result));
         }
 
 
@@ -30,11 +31,11 @@ namespace BookStore.Controllers
             try
             {
                 var result = await _userService.GetUserByIdAsync(id);
-                return Ok(result);
+                return Ok(ApiResponse<UserDto>.Ok(result));
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(ApiResponse<string>.Fail(ex.Message));
             }
         }
 
@@ -45,11 +46,11 @@ namespace BookStore.Controllers
             try
             {
                 var result = await _userService.GetUserByUsernameAsync(username);
-                return Ok(result);
+                return Ok(ApiResponse<UserDto>.Ok(result));
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(ApiResponse<string>.Fail(ex.Message));
             }
         }
 
@@ -58,7 +59,7 @@ namespace BookStore.Controllers
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersByRole(int roleNumber)
         {
             var result = await _userService.GetUsersByRoleAsync(roleNumber);
-            return Ok(result);
+            return Ok(ApiResponse<IEnumerable<UserDto>>.Ok(result));
         }
         [HttpPut("{id:int}")]
         public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] UserUpdateDto dto)
@@ -66,11 +67,11 @@ namespace BookStore.Controllers
             try
             {
                 var result = await _userService.UpdateUserAsync(id, dto);
-                return Ok(result);
+                return Ok(ApiResponse<UserDto>.Ok(result, "Updated"));
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(ApiResponse<string>.Fail(ex.Message));
             }
         }
 
@@ -81,11 +82,11 @@ namespace BookStore.Controllers
             try
             {
                 var result = await _userService.DeleteUserAsync(id);
-                return Ok(new { success = result });
+                return Ok(ApiResponse<bool>.Ok(result, "Deleted"));
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(ApiResponse<string>.Fail(ex.Message));
             }
         }
     }
