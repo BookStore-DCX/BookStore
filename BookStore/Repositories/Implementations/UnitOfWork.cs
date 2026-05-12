@@ -18,7 +18,9 @@ namespace BookStore.Repositories.Implementations
             IPurchaseLogRepository purchaseLogs,
             IReviewRepository reviews,
             IBookConditionRepository bookConditions,
-            IInventoryRepository inventories)
+            IInventoryRepository inventories,
+            IBookRepository books,
+            IAuthorRepository authors)
         {
             _context = context;
             Users = users;
@@ -30,6 +32,8 @@ namespace BookStore.Repositories.Implementations
             Reviews = reviews;
             BookConditions = bookConditions;
             Inventories = inventories;
+            Books = books;
+            Authors = authors;
         }
 
         public IUserRepository Users { get; }
@@ -41,6 +45,8 @@ namespace BookStore.Repositories.Implementations
         public IReviewRepository Reviews { get; }
         public IBookConditionRepository BookConditions { get; }
         public IInventoryRepository Inventories { get; }
+        public IBookRepository Books { get; }
+        public IAuthorRepository Authors { get; }
 
         public async Task<int> SaveChangesAsync()
         {

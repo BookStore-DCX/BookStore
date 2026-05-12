@@ -2,49 +2,51 @@
 using BookStore.Exceptions;
 using System.Net;
 using System.Text.Json;
+using BookStore.Common;
+using BookStore.Exceptions;
 
 namespace BookStore.Middleware
 {
-    public class GlobalExceptionMiddleware
-    {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<GlobalExceptionMiddleware> _logger;
+	public class GlobalExceptionMiddleware
+	{
+		private readonly RequestDelegate _next;
+		private readonly ILogger<GlobalExceptionMiddleware> _logger;
 
-        public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
-        {
-            _next = next;
-            _logger = logger;
-        }
+		public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
+		{
+			_next = next;
+			_logger = logger;
+		}
 
-        public async Task InvokeAsync(HttpContext context)
-        {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unhandled exception");
-                await HandleExceptionAsync(context, ex);
-            }
-        }
+		public async Task InvokeAsync(HttpContext context)
+		{
+			try
+			{
+				await _next(context);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Unhandled exception");
+				await HandleExceptionAsync(context, ex);
+			}
+		}
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
-        {
-            var statusCode = exception switch
-            {
-                NotFoundException => HttpStatusCode.NotFound,
-                ConflictException => HttpStatusCode.Conflict,
-                UnauthorizedException => HttpStatusCode.Unauthorized,
-                _ => HttpStatusCode.InternalServerError
-            };
+		private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+		{
+			var statusCode = exception switch
+			{
+				NotFoundException => HttpStatusCode.NotFound,
+				ConflictException => HttpStatusCode.Conflict,
+				UnauthorizedException => HttpStatusCode.Unauthorized,
+				_ => HttpStatusCode.InternalServerError
+			};
 
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)statusCode;
+			context.Response.ContentType = "application/json";
+			context.Response.StatusCode = (int)statusCode;
 
-            var response = ApiResponse<string>.Fail(exception.Message);
-            return context.Response.WriteAsync(JsonSerializer.Serialize(response));
-        }
-    }
+			var response = ApiResponse<string>.Fail(exception.Message);
+			return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+		}
+	}
 
 }

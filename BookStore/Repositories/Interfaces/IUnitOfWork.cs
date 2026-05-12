@@ -11,6 +11,8 @@
         IReviewRepository Reviews { get; }
         IBookConditionRepository BookConditions { get; }
         IInventoryRepository Inventories { get; }
+        IBookRepository Books { get; }
+        IAuthorRepository Authors { get; }
 
         Task<int> SaveChangesAsync();
     }

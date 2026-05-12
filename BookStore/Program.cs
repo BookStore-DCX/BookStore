@@ -29,7 +29,6 @@ namespace BookStore
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -67,6 +66,8 @@ namespace BookStore
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             builder.Services.AddScoped<IBookConditionRepository, BookConditionRepository>();
             builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+            builder.Services.AddScoped<IBookRepository, BookRepository>();
+            builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
             builder.Services.AddScoped<IPublisherService, PublisherService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -79,6 +80,8 @@ namespace BookStore
             builder.Services.AddScoped<IReviewService, ReviewService>();
             builder.Services.AddScoped<IBookConditionService, BookConditionService>();
             builder.Services.AddScoped<IInventoryService, InventoryService>();
+            builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<IAuthorService, AuthorService>();
 
             var jwtSettings = builder.Configuration.GetSection("JwtSettings");
             builder.Services.AddAuthentication(options =>
@@ -99,10 +102,6 @@ namespace BookStore
                 };
             });
 
-            builder.Services.AddAuthorization(options =>
-            {
-                options.AddPolicy("StoreOwner", policy => policy.RequireRole("StoreOwner"));
-            });
 
             var app = builder.Build();
 
