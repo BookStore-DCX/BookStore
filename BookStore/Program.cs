@@ -1,4 +1,12 @@
 using BookStore.Data;
+using BookStore.Mappings;
+using BookStore.Repositories.Implementations;
+using BookStore.Repositories.Interfaces;
+using BookStore.Services.Implementations;
+using BookStore.Services.Interfaces;
+using BookStoreProjectApi.Repositories.Implementations;
+using BookStoreProjectApi.Services.Implementations;
+using BookStoreWebAPI.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore
@@ -18,6 +26,17 @@ namespace BookStore
 
             builder.Services.AddDbContext<BookContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+            builder.Services.AddScoped<IPurchaseLogRepository, PurchaseLogRepository>();
+
+
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+            builder.Services.AddScoped<IPurchaseLogService, PurchaseLogService>();
 
             var app = builder.Build();
 
