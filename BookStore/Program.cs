@@ -3,6 +3,7 @@ using BookStore.Data;
 using BookStore.DTOs.Auth;
 using BookStore.DTOs.User;
 using BookStore.Mappings;
+using BookStore.Middleware;
 using BookStore.Repositories.Implementations;
 using BookStore.Repositories.Interfaces;
 using BookStore.Services.Implementations;
@@ -15,6 +16,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 namespace BookStore
@@ -27,7 +29,15 @@ namespace BookStore
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "BookStore API",
+                    Version = "v1"
+                });
+            });
 
             builder.Services.AddDbContext<BookContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -54,6 +64,9 @@ namespace BookStore
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
             builder.Services.AddScoped<IPurchaseLogRepository, PurchaseLogRepository>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+            builder.Services.AddScoped<IBookConditionRepository, BookConditionRepository>();
+            builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 
             builder.Services.AddScoped<IPublisherService, PublisherService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -63,6 +76,9 @@ namespace BookStore
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
             builder.Services.AddScoped<IPurchaseLogService, PurchaseLogService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddScoped<IBookConditionService, BookConditionService>();
+            builder.Services.AddScoped<IInventoryService, InventoryService>();
 
             var jwtSettings = builder.Configuration.GetSection("JwtSettings");
             builder.Services.AddAuthentication(options =>
@@ -89,6 +105,8 @@ namespace BookStore
             });
 
             var app = builder.Build();
+
+            app.UseMiddleware<GlobalExceptionMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {

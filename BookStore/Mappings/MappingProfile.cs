@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using BookStore.DTOs.Auth;
+using BookStore.DTOs.BookCondition;
 using BookStore.DTOs.Category;
+using BookStore.DTOs.Inventory;
 using BookStore.DTOs.Publisher;
 using BookStore.DTOs.PurchaseLog;
+using BookStore.DTOs.Review;
 using BookStore.DTOs.ShoppingCart;
 using BookStore.DTOs.State;
 using BookStore.DTOs.User;
@@ -47,6 +50,20 @@ namespace BookStore.Mappings
             CreateMap<Purchaselog, PurchaseLogDto>().ReverseMap();
 
             CreateMap<PurchaseLogCreateDto, Purchaselog>();
+
+            CreateMap<Bookreview, ReviewDto>().ReverseMap();
+
+            CreateMap<Bookcondition, BookConditionDto>();
+
+            CreateMap<Inventory, InventoryDto>()
+                .ForMember(
+                    d => d.ConditionDescription,
+                    o => o.MapFrom(s => s.RanksNavigation != null ? s.RanksNavigation.Description : null))
+                .ForMember(
+                    d => d.Price,
+                    o => o.MapFrom(s => s.RanksNavigation != null ? s.RanksNavigation.Price : null));
+
+            CreateMap<InventoryCreateDto, Inventory>();
         }
     }
 }

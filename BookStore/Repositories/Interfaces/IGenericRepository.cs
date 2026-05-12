@@ -9,4 +9,5 @@
         Task DeleteAsync(params object[] id);
         Task<bool> ExistsAsync(params object[] id);
     }
+
 }

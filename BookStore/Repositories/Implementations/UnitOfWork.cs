@@ -15,7 +15,10 @@ namespace BookStore.Repositories.Implementations
             ICategoryRepository categories,
             IStateRepository states,
             IShoppingCartRepository shoppingCarts,
-            IPurchaseLogRepository purchaseLogs)
+            IPurchaseLogRepository purchaseLogs,
+            IReviewRepository reviews,
+            IBookConditionRepository bookConditions,
+            IInventoryRepository inventories)
         {
             _context = context;
             Users = users;
@@ -24,6 +27,9 @@ namespace BookStore.Repositories.Implementations
             States = states;
             ShoppingCarts = shoppingCarts;
             PurchaseLogs = purchaseLogs;
+            Reviews = reviews;
+            BookConditions = bookConditions;
+            Inventories = inventories;
         }
 
         public IUserRepository Users { get; }
@@ -32,6 +38,9 @@ namespace BookStore.Repositories.Implementations
         public IStateRepository States { get; }
         public IShoppingCartRepository ShoppingCarts { get; }
         public IPurchaseLogRepository PurchaseLogs { get; }
+        public IReviewRepository Reviews { get; }
+        public IBookConditionRepository BookConditions { get; }
+        public IInventoryRepository Inventories { get; }
 
         public async Task<int> SaveChangesAsync()
         {
