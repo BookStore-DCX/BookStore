@@ -25,7 +25,9 @@ namespace BookStore.Services.Implementations
         {
             var user = await _uow.Users.GetByIdWithRoleNameAsync(userId);
             if (user == null)
+            {
                 throw new KeyNotFoundException($"User with ID {userId} not found");
+            }
 
             return user;
         }
@@ -45,7 +47,9 @@ namespace BookStore.Services.Implementations
         {
             var user = await _uow.Users.GetByIdAsync(userId);
             if (user == null)
+            {
                 throw new KeyNotFoundException($"User with ID {userId} not found");
+            }
 
             _mapper.Map(dto, user);
 
@@ -53,7 +57,9 @@ namespace BookStore.Services.Implementations
             {
                 var roleExists = await _uow.Users.RoleExistsAsync(dto.RoleNumber.Value);
                 if (!roleExists)
+                {
                     throw new KeyNotFoundException($"Role number {dto.RoleNumber.Value} not found");
+                }
             }
 
             await _uow.Users.UpdateAsync(user);
@@ -61,7 +67,9 @@ namespace BookStore.Services.Implementations
 
             var updated = await _uow.Users.GetByIdWithRoleNameAsync(userId);
             if (updated == null)
+            {
                 throw new KeyNotFoundException($"User with ID {userId} not found");
+            }
 
             return updated;
         }
@@ -70,7 +78,9 @@ namespace BookStore.Services.Implementations
         {
             bool isExist = await _uow.Users.ExistsAsync(userId);
             if (isExist == false)
+            {
                 throw new KeyNotFoundException($"User with ID {userId} not found");
+            }
 
             await _uow.Users.DeleteAsync(userId);
             await _uow.SaveChangesAsync();
@@ -81,10 +91,11 @@ namespace BookStore.Services.Implementations
         {
             var roleExists = await _uow.Users.RoleExistsAsync(roleNumber);
             if (!roleExists)
+            {
                 throw new KeyNotFoundException($"Role number {roleNumber} not found");
+            }
 
             return await _uow.Users.GetUsersByRoleWithRoleNameAsync(roleNumber);
-
         }
     }
 }

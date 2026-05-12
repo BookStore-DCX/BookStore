@@ -5,51 +5,52 @@ using Microsoft.EntityFrameworkCore;
 namespace BookStore.Repositories.Implementations
 {
 
-public class GenericRepository<T> : IGenericRepository<T> where T : class
-{
-    protected readonly BookContext _context;
-    protected readonly DbSet<T> _dbSet;
-
-    public GenericRepository(BookContext context)
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        _context = context;
-        _dbSet = context.Set<T>();
-    }
+        protected readonly BookContext _context;
+        protected readonly DbSet<T> _dbSet;
 
-    public virtual async Task<IEnumerable<T>> GetAllAsync()
+        public GenericRepository(BookContext context)
+        {
+            _context = context;
+            _dbSet = context.Set<T>();
+        }
+
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _dbSet.AsNoTracking().ToListAsync();
         }
 
 
-    public virtual async Task<T?> GetByIdAsync(params object[] id)
+        public virtual async Task<T?> GetByIdAsync(params object[] id)
         {
             return await _dbSet.FindAsync(id);
         }
 
-    public virtual async Task AddAsync(T entity)
+        public virtual async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
         }
 
-    public virtual Task UpdateAsync(T entity)
-    {
-        _dbSet.Update(entity);
-        return Task.CompletedTask;
-    }
-
-    public virtual async Task DeleteAsync(params object[] id)
-    {
-        var entity = await GetByIdAsync(id);
-        if (entity != null)
+        public virtual Task UpdateAsync(T entity)
         {
-            _dbSet.Remove(entity);
+            _dbSet.Update(entity);
+            return Task.CompletedTask;
         }
-    }
 
-    public virtual async Task<bool> ExistsAsync(params object[] id)
+        public virtual async Task DeleteAsync(params object[] id)
+        {
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+            }
+        }
+
+        public virtual async Task<bool> ExistsAsync(params object[] id)
         {
             return await GetByIdAsync(id) != null;
         }
     }
+
 }

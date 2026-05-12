@@ -10,7 +10,6 @@ namespace BookStore.Repositories.Implementations
     {
         public UserRepository(BookContext context) : base(context)
         {
-
         }
 
         private IQueryable<UserDto> UserWithRoleNameQuery()
@@ -39,7 +38,9 @@ namespace BookStore.Repositories.Implementations
         public override async Task<User?> GetByIdAsync(params object[] id)
         {
             if (id.Length == 0 || id[0] is not int userId)
+            {
                 return null;
+            }
 
             return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId);
         }
@@ -83,5 +84,4 @@ namespace BookStore.Repositories.Implementations
                 .ToListAsync();
         }
     }
-
 }

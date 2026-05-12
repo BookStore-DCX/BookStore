@@ -8,6 +8,8 @@ using BookStore.Repositories.Interfaces;
 using BookStore.Services.Implementations;
 using BookStore.Services.Interfaces;
 using BookStore.Validators;
+using BookStoreProjectApi.Repositories.Implementations;
+using BookStoreProjectApi.Services.Implementations;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,17 +50,19 @@ namespace BookStore
             builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IStateRepository, StateRepository>();
-
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+            builder.Services.AddScoped<IPurchaseLogRepository, PurchaseLogRepository>();
 
             builder.Services.AddScoped<IPublisherService, PublisherService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IStateService, StateService>();
-
             builder.Services.AddScoped<IJwtService, JwtService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+            builder.Services.AddScoped<IPurchaseLogService, PurchaseLogService>();
 
             var jwtSettings = builder.Configuration.GetSection("JwtSettings");
             builder.Services.AddAuthentication(options =>

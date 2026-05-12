@@ -1,4 +1,5 @@
-﻿using BookStore.Data;
+﻿using System.Threading.Tasks;
+using BookStore.Data;
 using BookStore.Repositories.Interfaces;
 
 namespace BookStore.Repositories.Implementations
@@ -12,19 +13,25 @@ namespace BookStore.Repositories.Implementations
             IUserRepository users,
             IPublisherRepository publishers,
             ICategoryRepository categories,
-            IStateRepository states)
+            IStateRepository states,
+            IShoppingCartRepository shoppingCarts,
+            IPurchaseLogRepository purchaseLogs)
         {
             _context = context;
             Users = users;
             Publishers = publishers;
             Categories = categories;
             States = states;
+            ShoppingCarts = shoppingCarts;
+            PurchaseLogs = purchaseLogs;
         }
 
         public IUserRepository Users { get; }
         public IPublisherRepository Publishers { get; }
         public ICategoryRepository Categories { get; }
         public IStateRepository States { get; }
+        public IShoppingCartRepository ShoppingCarts { get; }
+        public IPurchaseLogRepository PurchaseLogs { get; }
 
         public async Task<int> SaveChangesAsync()
         {

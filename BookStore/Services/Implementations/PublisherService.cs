@@ -4,7 +4,6 @@ using BookStore.Exceptions;
 using BookStore.Models;
 using BookStore.Repositories.Interfaces;
 using BookStore.Services.Interfaces;
-using BookStore.Repositories.Interfaces;
 
 namespace BookStore.Services.Implementations
 {

@@ -43,7 +43,7 @@ namespace BookStore.Services.Implementations
             };
         }
 
-        public async Task<UserDto> RegisterAsync(RegisterDto dto)
+        public async Task<UserDto?> RegisterAsync(RegisterDto dto)
         {
             if (await _authRepo.UserExistsAsync(dto.UserName))
             {
