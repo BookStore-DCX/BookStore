@@ -33,13 +33,13 @@ namespace BookStore.Services.Implementations
                 return null;
             }
 
-                return new AuthResponseDto
+            return new AuthResponseDto
             {
                 Token = _jwt.GenerateToken(user),
                 UserName = user.UserName,
                 Role = user.RoleNumberNavigation?.PermRole1 ?? "Guest",
                 Expiry = DateTime.UtcNow.AddMinutes(60),
-            
+
             };
         }
 
@@ -47,7 +47,7 @@ namespace BookStore.Services.Implementations
         {
             if (await _authRepo.UserExistsAsync(dto.UserName))
             {
-                return null;     
+                return null;
             }
 
             var user = _mapper.Map<User>(dto);
@@ -57,7 +57,11 @@ namespace BookStore.Services.Implementations
             await _userRepo.AddAsync(user);
             await _uow.SaveChangesAsync();
 
-            return _mapper.Map<UserDto>(user);
+            var created = await _userRepo.GetByIdWithRoleNameAsync(user.UserId);
+            if (created == null)
+                throw new KeyNotFoundException($"User with ID {user.UserId} not found");
+
+            return created;
         }
     }
 }

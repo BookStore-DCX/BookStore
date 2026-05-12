@@ -16,7 +16,6 @@ namespace BookStore.Repositories.Implementations
         public async Task<User?> ValidateUserAsync(string userName, string password)
         {
             var user = await _context.Users
-                .Include(u => u.RoleNumberNavigation)
                 .FirstOrDefaultAsync(u => u.UserName == userName);
 
             if (user == null)

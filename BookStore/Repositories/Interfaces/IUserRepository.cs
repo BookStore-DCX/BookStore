@@ -1,4 +1,5 @@
-﻿using BookStore.Models;
+﻿using BookStore.DTOs.User;
+using BookStore.Models;
 
 namespace BookStore.Repositories.Interfaces
 {
@@ -7,5 +8,10 @@ namespace BookStore.Repositories.Interfaces
         Task<User?> GetUserByUsernameAsync(string username);
         Task<IEnumerable<User>> GetUsersByRoleAsync(int roleNumber);
         Task<bool> RoleExistsAsync(int roleNumber);
+
+        Task<IEnumerable<UserDto>> GetAllWithRoleNameAsync();
+        Task<UserDto?> GetByIdWithRoleNameAsync(int userId);
+        Task<UserDto?> GetUserByUsernameWithRoleNameAsync(string username);
+        Task<IEnumerable<UserDto>> GetUsersByRoleWithRoleNameAsync(int roleNumber);
     }
 }

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using BookStore.DTOs.User;
-using BookStore.Models;
-using BookStore.Repositories.Implementations;
 using BookStore.Repositories.Interfaces;
 using BookStore.Services.Interfaces;
 
@@ -20,27 +18,27 @@ namespace BookStore.Services.Implementations
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
-            var users = await _uow.Users.GetAllAsync();
-
-            return _mapper.Map<IEnumerable<UserDto>>(users);
+            return await _uow.Users.GetAllWithRoleNameAsync();
         }
+
         public async Task<UserDto> GetUserByIdAsync(int userId)
         {
-            var user = await _uow.Users.GetByIdAsync(userId);
+            var user = await _uow.Users.GetByIdWithRoleNameAsync(userId);
             if (user == null)
                 throw new KeyNotFoundException($"User with ID {userId} not found");
 
-            return _mapper.Map<UserDto>(user);
+            return user;
         }
+
         public async Task<UserDto> GetUserByUsernameAsync(string username)
         {
-            var user = await _uow.Users.GetUserByUsernameAsync(username);
+            var user = await _uow.Users.GetUserByUsernameWithRoleNameAsync(username);
             if (user == null)
             {
                 throw new KeyNotFoundException($"User '{username}' not found");
             }
 
-            return _mapper.Map<UserDto>(user);
+            return user;
         }
 
         public async Task<UserDto> UpdateUserAsync(int userId, UserUpdateDto dto)
@@ -61,13 +59,17 @@ namespace BookStore.Services.Implementations
             await _uow.Users.UpdateAsync(user);
             await _uow.SaveChangesAsync();
 
-            return _mapper.Map<UserDto>(user);
+            var updated = await _uow.Users.GetByIdWithRoleNameAsync(userId);
+            if (updated == null)
+                throw new KeyNotFoundException($"User with ID {userId} not found");
+
+            return updated;
         }
 
         public async Task<bool> DeleteUserAsync(int userId)
         {
             bool isExist = await _uow.Users.ExistsAsync(userId);
-            if(isExist == false)
+            if (isExist == false)
                 throw new KeyNotFoundException($"User with ID {userId} not found");
 
             await _uow.Users.DeleteAsync(userId);
@@ -77,12 +79,7 @@ namespace BookStore.Services.Implementations
 
         public async Task<IEnumerable<UserDto>> GetUsersByRoleAsync(int roleNumber)
         {
-            var users = await _uow.Users.GetUsersByRoleAsync(roleNumber);
-            //if (!users.Any())
-            //    throw new KeyNotFoundException($"No users found for role {roleNumber}");
-
-            return _mapper.Map<IEnumerable<UserDto>>(users);
-
+            return await _uow.Users.GetUsersByRoleWithRoleNameAsync(roleNumber);
         }
     }
 }
