@@ -23,17 +23,12 @@ namespace BookStore
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // --- 1. Basic Web API Services ---
             builder.Services.AddControllers();
-
-            // FluentValidation auto-validation
-            builder.Services.AddFluentValidationAutoValidation();
-            builder.Services.AddFluentValidationClientsideAdapters();
-
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // --- 2. Database & Mapping ---
             builder.Services.AddDbContext<BookContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -43,26 +38,38 @@ namespace BookStore
             });
             builder.Services.AddSingleton(mapperConfig.CreateMapper());
 
-            //builder.Services.AddAutoMapper(typeof(MappingProfile));
-
-            //builder.Services.AddControllers()
-            //    .AddFluentValidation(config =>
-            //        config.RegisterValidatorsFromAssemblyContaining<RegisterDtoValidator>());
-
+            // --- 3. Validation (FluentValidation) ---
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddFluentValidationClientsideAdapters();
             builder.Services.AddTransient<IValidator<RegisterDto>, RegisterDtoValidator>();
             builder.Services.AddTransient<IValidator<LoginDto>, LoginDtoValidator>();
             builder.Services.AddTransient<IValidator<UserUpdateDto>, UserUpdateDtoValidator>();
 
+            // --- 4. Repositories (Merged) ---
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // Domain Repositories
+            builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IStateRepository, StateRepository>();
+
+            // Auth/User Repositories
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+            // --- 5. Services (Merged) ---
+            // Domain Services
+            builder.Services.AddScoped<IPublisherService, PublisherService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IStateService, StateService>();
 
+            // Auth/Identity Services
             builder.Services.AddScoped<IJwtService, JwtService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IUserService, UserService>();
 
+            // --- 6. Authentication & Authorization ---
             var jwtSettings = builder.Configuration.GetSection("JwtSettings");
             builder.Services.AddAuthentication(options =>
             {
@@ -82,11 +89,15 @@ namespace BookStore
                 };
             });
 
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthorization(options =>
+            {
+                // Re-added the specific policy from the incoming data
+                options.AddPolicy("StoreOwner", policy => policy.RequireRole("StoreOwner"));
+            });
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // --- 7. Middleware Pipeline ---
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -95,6 +106,7 @@ namespace BookStore
 
             app.UseHttpsRedirection();
 
+            // Authentication MUST come before Authorization
             app.UseAuthentication();
             app.UseAuthorization();
 
