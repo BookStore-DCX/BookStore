@@ -58,9 +58,17 @@ namespace BookStore.Controllers
         [HttpGet("role/{roleNumber:int}")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersByRole(int roleNumber)
         {
-            var result = await _userService.GetUsersByRoleAsync(roleNumber);
-            return Ok(ApiResponse<IEnumerable<UserDto>>.Ok(result));
+            try
+            {
+                var result = await _userService.GetUsersByRoleAsync(roleNumber);
+                return Ok(ApiResponse<IEnumerable<UserDto>>.Ok(result));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ApiResponse<string>.Fail(ex.Message));
+            }
         }
+
         [HttpPut("{id:int}")]
         public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] UserUpdateDto dto)
         {

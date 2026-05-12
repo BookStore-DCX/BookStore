@@ -79,7 +79,12 @@ namespace BookStore.Services.Implementations
 
         public async Task<IEnumerable<UserDto>> GetUsersByRoleAsync(int roleNumber)
         {
+            var roleExists = await _uow.Users.RoleExistsAsync(roleNumber);
+            if (!roleExists)
+                throw new KeyNotFoundException($"Role number {roleNumber} not found");
+
             return await _uow.Users.GetUsersByRoleWithRoleNameAsync(roleNumber);
+
         }
     }
 }

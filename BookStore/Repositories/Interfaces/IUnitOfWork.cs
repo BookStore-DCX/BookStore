@@ -1,6 +1,4 @@
-﻿namespace BookStore.Repositories.Interfaces
-{
-using BookStore.Repositories.Interfaces;
+﻿using BookStore.Repositories.Interfaces;
 
 namespace BookStore.Repositories.Interfaces
 {
