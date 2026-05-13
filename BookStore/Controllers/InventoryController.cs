@@ -10,6 +10,7 @@ namespace BookStore.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin, StoreOwner")]
     public class InventoryController : ControllerBase
     {
         private readonly IUnitOfWork _uow;

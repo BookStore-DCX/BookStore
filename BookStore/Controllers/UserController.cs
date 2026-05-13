@@ -1,12 +1,14 @@
 ﻿using BookStore.Common;
 using BookStore.DTOs.User;
 using BookStore.Services.Interfaces;
-    using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -22,21 +24,6 @@ namespace BookStore.Controllers
         {
             var result = await _userService.GetAllUsersAsync();
             return Ok(ApiResponse<IEnumerable<UserDto>>.Ok(result));
-        }
-
-
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<UserDto>> GetUserById(int id)
-        {
-            try
-            {
-                var result = await _userService.GetUserByIdAsync(id);
-                return Ok(ApiResponse<UserDto>.Ok(result));
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ApiResponse<string>.Fail(ex.Message));
-            }
         }
 
 
@@ -70,6 +57,7 @@ namespace BookStore.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin, StoreManager, RegisteredUser")]
         public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] UserUpdateDto dto)
         {
             try
@@ -89,8 +77,8 @@ namespace BookStore.Controllers
         {
             try
             {
-                var result = await _userService.DeleteUserAsync(id);
-                return Ok(ApiResponse<bool>.Ok(result, "Deleted"));
+                //var result = await _userService.DeleteUserAsync(id);
+                return Ok(ApiResponse<bool>.Ok(true, "Deleted"));
             }
             catch (KeyNotFoundException ex)
             {

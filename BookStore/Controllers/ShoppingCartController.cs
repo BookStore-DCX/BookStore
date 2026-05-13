@@ -11,7 +11,7 @@ namespace BookStore.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class ShoppingCartController : ControllerBase
     {
         private readonly IUnitOfWork _uow; private readonly IMapper _mapper;

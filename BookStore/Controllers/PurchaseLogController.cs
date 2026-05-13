@@ -13,7 +13,7 @@ namespace BookStore.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class PurchaseLogController : ControllerBase
     {
         private readonly IUnitOfWork _uow; private readonly IMapper _mapper;

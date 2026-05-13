@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]	
 public class BookController : ControllerBase
 {
 	private readonly IUnitOfWork _uow;
@@ -16,14 +17,16 @@ public class BookController : ControllerBase
 	public BookController(IUnitOfWork uow, IMapper mapper) { _uow = uow; _mapper = mapper; }
 
 	[HttpGet]
-	public async Task<IActionResult> GetAll()
+    [AllowAnonymous]
+    public async Task<IActionResult> GetAll()
 	{
 		var books = await _uow.Books.GetAllAsync();
 		return Ok(ApiResponse<IEnumerable<BookDto>>.Ok(_mapper.Map<IEnumerable<BookDto>>(books)));
 	}
 
 	[HttpGet("{isbn}")]
-	public async Task<IActionResult> GetByIsbn(string isbn)
+    [AllowAnonymous]
+    public async Task<IActionResult> GetByIsbn(string isbn)
 	{
 		var book = await _uow.Books.GetBookWithDetailsAsync(isbn)
 			?? throw new NotFoundException($"Book {isbn} not found");
@@ -31,21 +34,24 @@ public class BookController : ControllerBase
 	}
 
 	[HttpGet("category/{id}")]
-	public async Task<IActionResult> GetByCategory(int id)
+    [AllowAnonymous]
+    public async Task<IActionResult> GetByCategory(int id)
 	{
 		var books = await _uow.Books.GetBooksByCategoryAsync(id);
 		return Ok(ApiResponse<IEnumerable<BookDto>>.Ok(_mapper.Map<IEnumerable<BookDto>>(books)));
 	}
 
 	[HttpGet("search")]
-	public async Task<IActionResult> Search([FromQuery] string term)
+    [AllowAnonymous]
+    public async Task<IActionResult> Search([FromQuery] string term)
 	{
 		var books = await _uow.Books.SearchBooksAsync(term);
 		return Ok(ApiResponse<IEnumerable<BookDto>>.Ok(_mapper.Map<IEnumerable<BookDto>>(books)));
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Create([FromBody] BookCreateDto dto)
+    [Authorize(Roles = "Admin, StoreOwner")]
+    public async Task<IActionResult> Create([FromBody] BookCreateDto dto)
 	{
 		var book = _mapper.Map<Book>(dto);
 		await _uow.Books.AddAsync(book);
@@ -55,7 +61,8 @@ public class BookController : ControllerBase
 	}
 
 	[HttpPut("{isbn}")]
-	public async Task<IActionResult> Update(string isbn, [FromBody] BookUpdateDto dto)
+    [Authorize(Roles = "Admin, StoreOwner")]
+    public async Task<IActionResult> Update(string isbn, [FromBody] BookUpdateDto dto)
 	{
 		var book = await _uow.Books.GetByIdAsync(isbn)
 			?? throw new NotFoundException($"Book {isbn} not found");
@@ -66,7 +73,8 @@ public class BookController : ControllerBase
 	}
 
 	[HttpDelete("{isbn}")]
-	public async Task<IActionResult> Delete(string isbn)
+    [Authorize(Roles = "StoreOwner, Admin")]
+    public async Task<IActionResult> Delete(string isbn)
 	{
 		if (!await _uow.Books.ExistsAsync(isbn))
 			throw new NotFoundException($"Book {isbn} not found");

@@ -29,7 +29,7 @@ public class AuthorController : ControllerBase
         return Ok(ApiResponse<IEnumerable<AuthorDto>>.Ok(_mapper.Map<IEnumerable<AuthorDto>>(authors)));
     }
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, StoreOwner")]
     public async Task<IActionResult> Create([FromBody] AuthorCreateDto dto)
     {
         var author = _mapper.Map<Author>(dto);
@@ -39,7 +39,7 @@ public class AuthorController : ControllerBase
             ApiResponse<AuthorDto>.Created(_mapper.Map<AuthorDto>(author)));
     }
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, StoreOwner")]
     public async Task<IActionResult> Delete(int id)
     {
         if (!await _uow.Authors.ExistsAsync(id)) throw new NotFoundException($"Author {id} not found");

@@ -11,12 +11,14 @@ namespace BookStore.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ReviewController : ControllerBase
     {
         private readonly IUnitOfWork _uow; private readonly IMapper _mapper;
         public ReviewController(IUnitOfWork uow, IMapper mapper) { _uow = uow; _mapper = mapper; }
 
         [HttpGet("book/{isbn}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByIsbn(string isbn)
         {
             var reviews = await _uow.Reviews.GetReviewsByBookAsync(isbn);
@@ -29,6 +31,7 @@ namespace BookStore.Controllers
         }
 
         [HttpGet("reviewer/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByReviewer(int id)
         {
             var reviews = await _uow.Reviews.GetReviewsByReviewerAsync(id);
@@ -36,6 +39,7 @@ namespace BookStore.Controllers
         }
 
         [HttpPost]
+                [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> Create([FromBody] ReviewDto dto)
         {
             var review = _mapper.Map<Bookreview>(dto);
@@ -46,6 +50,7 @@ namespace BookStore.Controllers
         }
 
         [HttpDelete("{isbn}/{reviewerId}")]
+        [Authorize(Roles = "Admin, StoreOwner, RegisteredUser")]
         public async Task<IActionResult> Delete(string isbn, int reviewerId)
         {
             var reviews = await _uow.Reviews.GetReviewsByBookAsync(isbn);

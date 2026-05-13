@@ -2,12 +2,14 @@
 using BookStore.Common;
 using BookStore.DTOs.BookCondition;
 using BookStore.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class BookConditionController : ControllerBase
     {
         private readonly IUnitOfWork _uow;
@@ -20,6 +22,7 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             var conditions = await _uow.BookConditions.GetAllAsync();

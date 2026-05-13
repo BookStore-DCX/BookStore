@@ -12,6 +12,7 @@ namespace BookStore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PublisherController : ControllerBase
     {
         private readonly IUnitOfWork _uow;
@@ -26,6 +27,7 @@ namespace BookStore.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             var pubs = await _uow.Publishers.GetAllAsync();

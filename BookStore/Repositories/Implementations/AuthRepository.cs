@@ -13,10 +13,30 @@ namespace BookStore.Repositories.Implementations
         {
             _context = context;
         }
+
+        private IQueryable<User> UserWithRoleQuery()
+        {
+            return from u in _context.Users.AsNoTracking()
+                   join r in _context.Permroles.AsNoTracking()
+                       on u.RoleNumber equals r.RoleNumber into roles
+                   from r in roles.DefaultIfEmpty()
+                   select new User
+                   {
+                       UserId = u.UserId,
+                       FirstName = u.FirstName,
+                       LastName = u.LastName,
+                       PhoneNumber = u.PhoneNumber,
+                       UserName = u.UserName,
+                       Password = u.Password,
+                       RoleNumber = u.RoleNumber,
+                       RoleNumberNavigation = r
+                   };
+        }
         public async Task<User?> ValidateUserAsync(string userName, string password)
         {
-            var user = await _context.Users
+             var user = await UserWithRoleQuery()
                 .FirstOrDefaultAsync(u => u.UserName == userName);
+
 
             if (user == null)
             {
