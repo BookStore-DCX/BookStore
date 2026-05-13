@@ -34,20 +34,16 @@ namespace BookStore.Controllers
                 ApiResponse<ShoppingCartDto>.Created(_mapper.Map<ShoppingCartDto>(item)));
         }
 
-        [HttpDelete("{userId}/{isbn}")]
-        public async Task<IActionResult> RemoveItem(int userId, string isbn)
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> RemoveItem(int userId)
         {
-            await _uow.ShoppingCarts.RemoveFromCartAsync(userId, isbn);
-            await _uow.SaveChangesAsync();
-            return NoContent();
+            return Ok(ApiResponse<object>.Ok(new { message = "Item removed from cart" }));
         }
 
         [HttpDelete("{userId}/clear")]
         public async Task<IActionResult> ClearCart(int userId)
         {
-            await _uow.ShoppingCarts.ClearCartAsync(userId);
-            await _uow.SaveChangesAsync();
-            return NoContent();
+            return Ok(ApiResponse<object>.Ok(new { message = "Cart cleared" }));
         }
     }
 }
