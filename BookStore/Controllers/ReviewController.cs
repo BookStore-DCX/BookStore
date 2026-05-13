@@ -14,14 +14,16 @@ namespace BookStore.Controllers
     [Authorize]
     public class ReviewController : ControllerBase
     {
-        private readonly IUnitOfWork _uow; private readonly IMapper _mapper;
+        private readonly IUnitOfWork _uow;
+        private readonly IMapper _mapper;
+
         public ReviewController(IUnitOfWork uow, IMapper mapper) { _uow = uow; _mapper = mapper; }
 
-        [HttpGet("book/{isbn}")]
+        [HttpGet("book/{bookName}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetByIsbn(string isbn)
+        public async Task<IActionResult> GetByBookName(string bookName)
         {
-            var reviews = await _uow.Reviews.GetReviewsByBookAsync(isbn);
+            var reviews = await _uow.Reviews.GetReviewsByBookNameAsync(bookName);
 
             return Ok(
                 ApiResponse<IEnumerable<ReviewDto>>.Ok(
@@ -39,31 +41,26 @@ namespace BookStore.Controllers
         }
 
         [HttpPost]
-                [Authorize(Roles = "RegisteredUser")]
+        [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> Create([FromBody] ReviewDto dto)
         {
             var review = _mapper.Map<Bookreview>(dto);
             await _uow.Reviews.AddAsync(review);
             await _uow.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetByIsbn), new { isbn = review.Isbn },
+            return CreatedAtAction(nameof(GetByBookName), new { bookName = review.IsbnNavigation.Title },
                 ApiResponse<ReviewDto>.Created(_mapper.Map<ReviewDto>(review)));
         }
 
-        [HttpDelete("{isbn}/{reviewerId}")]
+        [HttpDelete("{bookName}/{reviewerId}")]
         [Authorize(Roles = "Admin, StoreOwner, RegisteredUser")]
-        public async Task<IActionResult> Delete(string isbn, int reviewerId)
+        public async Task<IActionResult> Delete(string bookName, int reviewerId)
         {
-            var reviews = await _uow.Reviews.GetReviewsByBookAsync(isbn);
+            var reviews = await _uow.Reviews.GetReviewsByBookNameAsync(bookName);
 
             var review = reviews.FirstOrDefault(r => r.ReviewerId == reviewerId)
                 ?? throw new NotFoundException("Review not found");
 
-            await _uow.Reviews.DeleteAsync(review);
-
-            await _uow.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(new { message = "Review deleted successfully" });
         }
     }
-
 }

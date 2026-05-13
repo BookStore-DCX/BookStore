@@ -17,8 +17,8 @@ namespace BookStore.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ReviewDto>> GetReviewsByBookAsync(string isbn)
-            => _mapper.Map<IEnumerable<ReviewDto>>(await _uow.Reviews.GetReviewsByBookAsync(isbn));
+        public async Task<IEnumerable<ReviewDto>> GetReviewsByBookNameAsync(string bookName)
+            => _mapper.Map<IEnumerable<ReviewDto>>(await _uow.Reviews.GetReviewsByBookNameAsync(bookName));
 
         public async Task<IEnumerable<ReviewDto>> GetReviewsByReviewerAsync(int reviewerId)
             => _mapper.Map<IEnumerable<ReviewDto>>(await _uow.Reviews.GetReviewsByReviewerAsync(reviewerId));
@@ -31,11 +31,10 @@ namespace BookStore.Services.Implementations
             return _mapper.Map<ReviewDto>(review);
         }
 
-        public async Task DeleteReviewAsync(string isbn, int reviewerId)
+        public async Task DeleteReviewAsync(string bookName, int reviewerId)
         {
-            await _uow.Reviews.DeleteAsync(isbn, reviewerId);
+            await _uow.Reviews.DeleteAsync(bookName, reviewerId);
             await _uow.SaveChangesAsync();
         }
     }
-
 }
