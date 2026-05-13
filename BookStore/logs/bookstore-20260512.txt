@@ -76,3 +76,198 @@ FROM [book] AS [b]
 2026-05-12 13:59:15.177 +05:30 [INF] Executed action BookController.GetAll (BookStore) in 344.7984ms
 2026-05-12 13:59:15.180 +05:30 [INF] Executed endpoint 'BookController.GetAll (BookStore)'
 2026-05-12 13:59:15.183 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/api/Book - 200 null application/json; charset=utf-8 389.0942ms
+2026-05-12 15:59:55.876 +05:30 [INF] Now listening on: https://localhost:7243
+2026-05-12 15:59:56.007 +05:30 [INF] Now listening on: http://localhost:5157
+2026-05-12 15:59:56.420 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-12 15:59:56.441 +05:30 [INF] Hosting environment: Development
+2026-05-12 15:59:56.449 +05:30 [INF] Content root path: C:\Capgemini_CU_sec3_.netWithAzure_RaghviSharma\BookStoreFinalProject\BookStore
+2026-05-12 16:00:00.818 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/swagger/index.html - null null
+2026-05-12 16:00:02.038 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-12 16:00:02.052 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/_vs/browserLink - null null
+2026-05-12 16:00:02.089 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/swagger/index.html - 200 null text/html;charset=utf-8 1430.8107ms
+2026-05-12 16:00:02.193 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/_framework/aspnetcore-browser-refresh.js - 200 16503 application/javascript; charset=utf-8 155.478ms
+2026-05-12 16:00:02.338 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/_vs/browserLink - 200 null text/javascript; charset=UTF-8 286.3424ms
+2026-05-12 16:00:02.402 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/swagger/v1/swagger.json - null null
+2026-05-12 16:00:02.469 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 67.0273ms
+2026-05-12 16:00:11.383 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/api/Book - null null
+2026-05-12 16:00:11.762 +05:30 [INF] Executing endpoint 'BookController.GetAll (BookStore)'
+2026-05-12 16:00:11.866 +05:30 [INF] Route matched with {action = "GetAll", controller = "Book"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAll() on controller BookController (BookStore).
+2026-05-12 16:00:17.910 +05:30 [INF] Executed DbCommand (169ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [b].[ISBN], [b].[Category], [b].[Description], [b].[Edition], [b].[PublisherID], [b].[Title]
+FROM [book] AS [b]
+2026-05-12 16:00:18.138 +05:30 [INF] Executing OkObjectResult, writing value of type 'BookStore.Common.ApiResponse`1[[System.Collections.Generic.IEnumerable`1[[BookStore.DTOs.Book.BookDto, BookStore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-05-12 16:00:18.218 +05:30 [INF] Executed action BookController.GetAll (BookStore) in 6336.1595ms
+2026-05-12 16:00:18.226 +05:30 [INF] Executed endpoint 'BookController.GetAll (BookStore)'
+2026-05-12 16:00:18.255 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/api/Book - 200 null application/json; charset=utf-8 6871.6717ms
+2026-05-12 16:00:41.414 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7243/api/Book/4-668-39283-8 - null null
+2026-05-12 16:00:41.448 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-05-12 16:00:41.469 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-12 16:00:41.471 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7243/api/Book/4-668-39283-8 - 401 0 null 65.4584ms
+2026-05-12 16:03:01.265 +05:30 [INF] Now listening on: https://localhost:7243
+2026-05-12 16:03:01.403 +05:30 [INF] Now listening on: http://localhost:5157
+2026-05-12 16:03:01.642 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-12 16:03:01.648 +05:30 [INF] Hosting environment: Development
+2026-05-12 16:03:01.649 +05:30 [INF] Content root path: C:\Capgemini_CU_sec3_.netWithAzure_RaghviSharma\BookStoreFinalProject\BookStore
+2026-05-12 16:03:02.778 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/swagger/index.html - null null
+2026-05-12 16:03:03.635 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/swagger/index.html - 200 null text/html;charset=utf-8 888.7729ms
+2026-05-12 16:03:03.682 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-12 16:03:03.682 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/_vs/browserLink - null null
+2026-05-12 16:03:03.714 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/_framework/aspnetcore-browser-refresh.js - 200 16503 application/javascript; charset=utf-8 31.9529ms
+2026-05-12 16:03:03.852 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/_vs/browserLink - 200 null text/javascript; charset=UTF-8 169.5383ms
+2026-05-12 16:03:03.911 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/swagger/v1/swagger.json - null null
+2026-05-12 16:03:03.980 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 69.4707ms
+2026-05-12 16:03:10.117 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/api/Book - null null
+2026-05-12 16:03:10.424 +05:30 [INF] Executing endpoint 'BookController.GetAll (BookStore)'
+2026-05-12 16:03:10.533 +05:30 [INF] Route matched with {action = "GetAll", controller = "Book"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAll() on controller BookController (BookStore).
+2026-05-12 16:03:17.536 +05:30 [INF] Executed DbCommand (269ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [b].[ISBN], [b].[Category], [b].[Description], [b].[Edition], [b].[PublisherID], [b].[Title]
+FROM [book] AS [b]
+2026-05-12 16:03:17.785 +05:30 [INF] Executing OkObjectResult, writing value of type 'BookStore.Common.ApiResponse`1[[System.Collections.Generic.IEnumerable`1[[BookStore.DTOs.Book.BookDto, BookStore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-05-12 16:03:17.890 +05:30 [INF] Executed action BookController.GetAll (BookStore) in 7338.7635ms
+2026-05-12 16:03:17.911 +05:30 [INF] Executed endpoint 'BookController.GetAll (BookStore)'
+2026-05-12 16:03:17.947 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/api/Book - 200 null application/json; charset=utf-8 7830.9659ms
+2026-05-12 16:03:38.251 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7243/api/Book/1-111-11111-4 - null null
+2026-05-12 16:03:38.299 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-05-12 16:03:38.328 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-12 16:03:38.332 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7243/api/Book/1-111-11111-4 - 401 0 null 81.1258ms
+2026-05-12 16:06:32.162 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/swagger/index.html - null null
+2026-05-12 16:06:32.252 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/swagger/index.html - 200 null text/html;charset=utf-8 89.7895ms
+2026-05-12 16:06:32.337 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-12 16:06:32.346 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/_vs/browserLink - null null
+2026-05-12 16:06:32.374 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/_framework/aspnetcore-browser-refresh.js - 200 16503 application/javascript; charset=utf-8 56.6574ms
+2026-05-12 16:06:32.441 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/_vs/browserLink - 200 null text/javascript; charset=UTF-8 96.7288ms
+2026-05-12 16:06:32.484 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/swagger/v1/swagger.json - null null
+2026-05-12 16:06:32.500 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/swagger/favicon-32x32.png - null null
+2026-05-12 16:06:32.536 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 51.8753ms
+2026-05-12 16:06:32.565 +05:30 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2026-05-12 16:06:32.578 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/swagger/favicon-32x32.png - 200 628 image/png 78.6454ms
+2026-05-12 16:06:38.322 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/api/Book - null null
+2026-05-12 16:06:38.343 +05:30 [INF] Executing endpoint 'BookController.GetAll (BookStore)'
+2026-05-12 16:06:38.365 +05:30 [INF] Route matched with {action = "GetAll", controller = "Book"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAll() on controller BookController (BookStore).
+2026-05-12 16:06:38.600 +05:30 [INF] Executed DbCommand (39ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [b].[ISBN], [b].[Category], [b].[Description], [b].[Edition], [b].[PublisherID], [b].[Title]
+FROM [book] AS [b]
+2026-05-12 16:06:38.612 +05:30 [INF] Executing OkObjectResult, writing value of type 'BookStore.Common.ApiResponse`1[[System.Collections.Generic.IEnumerable`1[[BookStore.DTOs.Book.BookDto, BookStore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-05-12 16:06:38.645 +05:30 [INF] Executed action BookController.GetAll (BookStore) in 272.8109ms
+2026-05-12 16:06:38.648 +05:30 [INF] Executed endpoint 'BookController.GetAll (BookStore)'
+2026-05-12 16:06:38.651 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/api/Book - 200 null application/json; charset=utf-8 329.5373ms
+2026-05-12 16:06:54.122 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7243/api/Book/1-111-11111-4 - null null
+2026-05-12 16:06:54.136 +05:30 [INF] Executing endpoint 'BookController.Delete (BookStore)'
+2026-05-12 16:06:54.173 +05:30 [INF] Route matched with {action = "Delete", controller = "Book"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Delete(System.String) on controller BookController (BookStore).
+2026-05-12 16:06:54.696 +05:30 [INF] Executed DbCommand (103ms) [Parameters=[@__p_0='?' (Size = 13) (DbType = AnsiStringFixedLength)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[ISBN], [b].[Category], [b].[Description], [b].[Edition], [b].[PublisherID], [b].[Title]
+FROM [book] AS [b]
+WHERE [b].[ISBN] = @__p_0
+2026-05-12 16:06:55.456 +05:30 [INF] Executed DbCommand (185ms) [Parameters=[@p0='?' (Size = 13) (DbType = AnsiStringFixedLength)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+DELETE FROM [book]
+OUTPUT 1
+WHERE [ISBN] = @p0;
+2026-05-12 16:06:55.637 +05:30 [ERR] An exception occurred in the database while saving changes for context type 'BookStore.Data.BookContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_bookauthor_ISBN". The conflict occurred in database "book", table "dbo.bookauthor", column 'ISBN'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnlyAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:1ae2022a-bef7-4c3e-989c-fec77c3a4a94
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_bookauthor_ISBN". The conflict occurred in database "book", table "dbo.bookauthor", column 'ISBN'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnlyAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:1ae2022a-bef7-4c3e-989c-fec77c3a4a94
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-05-12 16:06:56.146 +05:30 [INF] Executed action BookController.Delete (BookStore) in 1967.8616ms
+2026-05-12 16:06:56.153 +05:30 [INF] Executed endpoint 'BookController.Delete (BookStore)'
+2026-05-12 16:06:56.424 +05:30 [ERR] Unhandled exception
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_bookauthor_ISBN". The conflict occurred in database "book", table "dbo.bookauthor", column 'ISBN'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnlyAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:1ae2022a-bef7-4c3e-989c-fec77c3a4a94
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at BookStore.Repositories.Implementations.UnitOfWork.SaveChangesAsync()
+   at BookController.Delete(String isbn)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at BookStore.Middleware.GlobalExceptionMiddleware.InvokeAsync(HttpContext context)
+2026-05-12 16:06:56.485 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7243/api/Book/1-111-11111-4 - 500 null application/json 2362.33ms

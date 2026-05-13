@@ -1,0 +1,13 @@
+2026-05-13 10:45:55.209 +05:30 [INF] Now listening on: https://localhost:7243
+2026-05-13 10:45:55.419 +05:30 [INF] Now listening on: http://localhost:5157
+2026-05-13 10:45:56.048 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-13 10:45:56.104 +05:30 [INF] Hosting environment: Development
+2026-05-13 10:45:56.121 +05:30 [INF] Content root path: C:\Capgemini_CU_sec3_.netWithAzure_RaghviSharma\BookStoreFinalProject\BookStore
+2026-05-13 10:45:59.492 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/swagger/index.html - null null
+2026-05-13 10:46:00.420 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/_vs/browserLink - null null
+2026-05-13 10:46:00.423 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-13 10:46:00.435 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/swagger/index.html - 200 null text/html;charset=utf-8 984.3933ms
+2026-05-13 10:46:00.528 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/_framework/aspnetcore-browser-refresh.js - 200 16503 application/javascript; charset=utf-8 105.164ms
+2026-05-13 10:46:00.687 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/_vs/browserLink - 200 null text/javascript; charset=UTF-8 267.916ms
+2026-05-13 10:46:00.770 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7243/swagger/v1/swagger.json - null null
+2026-05-13 10:46:00.823 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7243/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 53.3199ms
