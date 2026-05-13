@@ -6,6 +6,8 @@ using BookStore.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+
+
 namespace BookStore.Controllers
 {
     [Route("api/[controller]")]
@@ -21,6 +23,8 @@ namespace BookStore.Controllers
             _mapper = mapper;
         }
 
+
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -33,7 +37,9 @@ namespace BookStore.Controllers
             );
         }
 
+
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetById(int id)
         {
             var publisher = await _uow.Publishers.GetByIdAsync(id);
@@ -55,6 +61,7 @@ namespace BookStore.Controllers
         }
 
         [HttpGet("state/{stateCode}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByState(string stateCode)
         {
             var pubs = await _uow.Publishers.GetPublishersByStateAsync(stateCode);
@@ -75,7 +82,9 @@ namespace BookStore.Controllers
             );
         }
 
+
         [HttpPost]
+        [Authorize(Roles = "StoreOwner,Admin")]
         public async Task<IActionResult> Create([FromBody] PublisherCreateDto dto)
         {
             var pub = _mapper.Map<Publisher>(dto);

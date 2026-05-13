@@ -4,13 +4,15 @@ using BookStore.DTOs;
 using BookStore.DTOs.Category;
 using BookStore.Exceptions;
 using BookStore.Repositories.Interfaces;
-using BookStore.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace BookStore.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly IUnitOfWork _uow;
@@ -23,6 +25,7 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             var categories = await _uow.Categories.GetAllAsync();
@@ -32,15 +35,18 @@ namespace BookStore.Controllers
             return Ok(ApiResponse<IEnumerable<CategoryDto>>.Ok(result));
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+
+
+        [HttpGet("{name}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByName(string name)
         {
-            var category = await _uow.Categories.GetByIdAsync(id);
+            var category = await _uow.Categories.GetByCategoryNameAsync(name);
 
             if (category == null)
             {
                 return NotFound(
-         ApiResponse<string>.Fail($"No category exists with ID {id}."));
+         ApiResponse<string>.Fail($"No category exists with name '{name}'."));
             }
 
             var result = _mapper.Map<CategoryDto>(category);

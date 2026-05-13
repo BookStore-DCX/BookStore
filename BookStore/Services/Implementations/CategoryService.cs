@@ -20,17 +20,15 @@ namespace BookStore.Services.Implementations
         public async Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync()
         {
             var categories = await _uow.Categories.GetAllAsync();
-
             return _mapper.Map<IEnumerable<CategoryDto>>(categories);
         }
 
-        public async Task<CategoryDto> GetCategoryByIdAsync(int id)
+        public async Task<CategoryDto> GetCategoryByNameAsync(string name)
         {
-            var category = await _uow.Categories.GetByIdAsync(id)
+            var category = await _uow.Categories.GetByCategoryNameAsync(name)
                 ?? throw new NotFoundException(
-                    $"Category with ID {id} not found"
+                    $"Category with name '{name}' not found"
                 );
-
             return _mapper.Map<CategoryDto>(category);
         }
     }
