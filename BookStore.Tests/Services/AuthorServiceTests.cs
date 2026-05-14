@@ -28,7 +28,6 @@ namespace BookStore.Tests.Services
 			_service = new AuthorService(_uowMock.Object, _mapperMock.Object);
 		}
 
-		// Positive 1: GetAll returns DTOs
 		[Fact]
 		public async Task GetAllAuthorsAsync_ReturnsDtos_WhenAuthorsExist()
 		{
@@ -47,7 +46,6 @@ namespace BookStore.Tests.Services
 			Assert.Equal("Alice", list[0].FirstName);
 		}
 
-		// Positive 2: Create adds and saves
 		[Fact]
 		public async Task CreateAuthorAsync_AddsAndSaves()
 		{
@@ -69,7 +67,6 @@ namespace BookStore.Tests.Services
 			_uowMock.Verify(u => u.SaveChangesAsync(), Times.Once);
 		}
 
-		// Positive 3: Search returns DTOs when matches found
 		[Fact]
 		public async Task SearchAuthorsAsync_ReturnsDtos_WhenMatchesFound()
 		{
@@ -88,7 +85,6 @@ namespace BookStore.Tests.Services
 			Assert.Equal("Carol", list[0].FirstName);
 		}
 
-		// Positive 4: Update updates and returns DTO when author exists
 		[Fact]
 		public async Task UpdateAuthorAsync_UpdatesAndReturnsDto_WhenAuthorExists()
 		{
@@ -110,7 +106,6 @@ namespace BookStore.Tests.Services
 			_uowMock.Verify(u => u.SaveChangesAsync(), Times.Once);
 		}
 
-		// Negative 1: Update throws NotFound when missing
 		[Fact]
 		public async Task UpdateAuthorAsync_ThrowsNotFound_WhenMissing()
 		{
@@ -119,7 +114,6 @@ namespace BookStore.Tests.Services
 			await Assert.ThrowsAsync<NotFoundException>(() => _service.UpdateAuthorAsync(99, new AuthorCreateDto()));
 		}
 
-		// Negative 2: Delete throws NotFound when missing
 		[Fact]
 		public async Task DeleteAuthorAsync_ThrowsNotFound_WhenMissing()
 		{
@@ -128,7 +122,6 @@ namespace BookStore.Tests.Services
 			await Assert.ThrowsAsync<NotFoundException>(() => _service.DeleteAuthorAsync(99));
 		}
 
-		// Negative 3: Create propagates when repository Add fails
 		[Fact]
 		public async Task CreateAuthorAsync_Throws_WhenRepositoryAddFails()
 		{
@@ -141,7 +134,7 @@ namespace BookStore.Tests.Services
 			await Assert.ThrowsAsync<InvalidOperationException>(() => _service.CreateAuthorAsync(createDto));
 		}
 
-		// Negative 4: Update propagates when SaveChanges fails
+
 		[Fact]
 		public async Task UpdateAuthorAsync_Throws_WhenSaveChangesFails()
 		{

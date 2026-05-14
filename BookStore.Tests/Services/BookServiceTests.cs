@@ -30,7 +30,6 @@ namespace BookStore.Tests.Services
 			_service = new BookService(_uowMock.Object, _mapperMock.Object);
 		}
 
-		// Positive 1: GetAll returns DTOs
 		[Fact]
 		public async Task GetAllBooksAsync_ReturnsDTOs_WhenBooksExist()
 		{
@@ -49,7 +48,6 @@ namespace BookStore.Tests.Services
 			Assert.Equal("Title1", list[0].Title);
 		}
 
-		// Positive 2: Create adds and saves
 		[Fact]
 		public async Task CreateBookAsync_AddsAndSaves()
 		{
@@ -71,7 +69,6 @@ namespace BookStore.Tests.Services
 			_uowMock.Verify(u => u.SaveChangesAsync(), Times.Once);
 		}
 
-		// Positive 3: GetByIsbn returns DTO when book exists
 		[Fact]
 		public async Task GetBookByIsbnAsync_ReturnsDto_WhenBookExists()
 		{
@@ -87,7 +84,6 @@ namespace BookStore.Tests.Services
 			Assert.Equal("Found", result.Title);
 		}
 
-		// Positive 4: Update updates and returns DTO when book exists
 		[Fact]
 		public async Task UpdateBookAsync_UpdatesAndReturnsDto_WhenBookExists()
 		{
@@ -109,7 +105,6 @@ namespace BookStore.Tests.Services
 			_uowMock.Verify(u => u.SaveChangesAsync(), Times.Once);
 		}
 
-		// Negative 1: Get by ISBN throws NotFound
 		[Fact]
 		public async Task GetBookByIsbnAsync_ThrowsNotFound_WhenMissing()
 		{
@@ -118,7 +113,6 @@ namespace BookStore.Tests.Services
 			await Assert.ThrowsAsync<NotFoundException>(() => _service.GetBookByIsbnAsync("missing"));
 		}
 
-		// Negative 2: Update throws NotFound when book missing
 		[Fact]
 		public async Task UpdateBookAsync_ThrowsNotFound_WhenMissing()
 		{
@@ -127,7 +121,6 @@ namespace BookStore.Tests.Services
 			await Assert.ThrowsAsync<NotFoundException>(() => _service.UpdateBookAsync("no", new BookUpdateDto()));
 		}
 
-		// Negative 3: Delete throws NotFound when book does not exist
 		[Fact]
 		public async Task DeleteBookAsync_ThrowsNotFound_WhenNotExists()
 		{
@@ -136,7 +129,6 @@ namespace BookStore.Tests.Services
 			await Assert.ThrowsAsync<NotFoundException>(() => _service.DeleteBookAsync("no"));
 		}
 
-		// Negative 4: Create propagates exception when repository Add fails
 		[Fact]
 		public async Task CreateBookAsync_Throws_WhenRepositoryAddFails()
 		{
