@@ -9,7 +9,7 @@ using BookStore.Repositories.Interfaces;
 using BookStore.Services.Implementations;
 using BookStore.Services.Interfaces;
 using BookStore.Validators;
-using BookStoreProjectApi.Repositories.Implementations;
+using BookStore.Repositories.Implementations;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

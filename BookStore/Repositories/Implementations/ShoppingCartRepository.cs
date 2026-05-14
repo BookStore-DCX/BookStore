@@ -4,7 +4,7 @@ using BookStore.Repositories.Implementations;
 using BookStore.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookStoreProjectApi.Repositories.Implementations
+namespace BookStore.Repositories.Implementations
 {
     public class ShoppingCartRepository : GenericRepository<Shoppingcart>, IShoppingCartRepository
     {

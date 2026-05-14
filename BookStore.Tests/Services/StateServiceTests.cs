@@ -7,7 +7,7 @@ using BookStore.Services.Implementations;
 using Moq;
 using Xunit;
 
-namespace BookStore.Tests
+namespace BookStore.Tests.Services
 {
     public class StateServiceTests
     {

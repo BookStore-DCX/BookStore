@@ -7,7 +7,7 @@ using BookStore.Repositories.Interfaces;
 using BookStore.Services.Implementations;
 using BookStore.Exceptions;
 
-namespace BookStore.Services.Tests
+namespace BookStore.Tests.Services
 {
     public class InventoryServiceTests
     {
@@ -22,12 +22,9 @@ namespace BookStore.Services.Tests
             _service = new InventoryService(_mockUnitOfWork.Object, _mockMapper.Object);
         }
 
-        // ===== POSITIVE TEST CASES =====
-
         [Fact]
         public async Task GetAllInventoryAsync_WithValidData_ReturnsAllInventory()
         {
-            // Arrange
             var inventories = new List<Inventory>
             {
                 new() { InventoryId = 1, Isbn = "978-0-123456-78-9", Ranks = 1, Purchased = 5 },
@@ -46,10 +43,8 @@ namespace BookStore.Services.Tests
             _mockMapper.Setup(m => m.Map<IEnumerable<InventoryDto>>(inventories))
                 .Returns(expectedDtos);
 
-            // Act
             var result = await _service.GetAllInventoryAsync();
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(3, result.Count());
             Assert.Equal(expectedDtos, result);
@@ -59,7 +54,6 @@ namespace BookStore.Services.Tests
         [Fact]
         public async Task CreateInventoryAsync_WithValidDto_CreatesAndReturnsInventory()
         {
-            // Arrange
             var createDto = new InventoryCreateDto
             {
                 Isbn = "978-0-123456-78-9",
@@ -89,10 +83,8 @@ namespace BookStore.Services.Tests
             _mockMapper.Setup(m => m.Map<InventoryDto>(inventory))
                 .Returns(expectedDto);
 
-            // Act
             var result = await _service.CreateInventoryAsync(createDto);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(expectedDto.InventoryId, result.InventoryId);
             Assert.Equal(expectedDto.Isbn, result.Isbn);
@@ -104,7 +96,6 @@ namespace BookStore.Services.Tests
         [Fact]
         public async Task UpdateInventoryAsync_WithValidData_UpdatesAndReturnsInventory()
         {
-            // Arrange
             int inventoryId = 1;
             var updateDto = new InventoryUpdateDto
             {
@@ -135,11 +126,9 @@ namespace BookStore.Services.Tests
                 .ReturnsAsync(1);
             _mockMapper.Setup(m => m.Map<InventoryDto>(It.IsAny<Inventory>()))
                 .Returns(expectedDto);
-
-            // Act
+            
             var result = await _service.UpdateInventoryAsync(inventoryId, updateDto);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal("978-0-987654-32-1", result.Isbn);
             Assert.Equal(2, result.Ranks);
@@ -150,7 +139,6 @@ namespace BookStore.Services.Tests
         [Fact]
         public async Task GetInventoryByBookAsync_WithValidIsbn_ReturnsInventoryForBook()
         {
-            // Arrange
             string isbn = "978-0-123456-78-9";
             var inventories = new List<Inventory>
             {
@@ -168,28 +156,22 @@ namespace BookStore.Services.Tests
             _mockMapper.Setup(m => m.Map<IEnumerable<InventoryDto>>(inventories))
                 .Returns(expectedDtos);
 
-            // Act
             var result = await _service.GetInventoryByBookAsync(isbn);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(2, result.Count());
             Assert.All(result, item => Assert.Equal(isbn, item.Isbn));
         }
 
-        // ===== NEGATIVE TEST CASES =====
-
         [Fact]
         public async Task UpdateInventoryAsync_WithInvalidId_ThrowsNotFoundException()
         {
-            // Arrange
             int invalidId = 999;
             var updateDto = new InventoryUpdateDto { Isbn = "978-0-123456-78-9" };
 
             _mockUnitOfWork.Setup(u => u.Inventories.GetByIdAsync(invalidId))
                 .ReturnsAsync((Inventory)null);
 
-            // Act & Assert
             var exception = await Assert.ThrowsAsync<NotFoundException>(
                 () => _service.UpdateInventoryAsync(invalidId, updateDto)
             );
@@ -200,7 +182,6 @@ namespace BookStore.Services.Tests
         [Fact]
         public async Task CreateInventoryAsync_WithRepositoryException_PropagatesException()
         {
-            // Arrange
             var createDto = new InventoryCreateDto
             {
                 Isbn = "978-0-123456-78-9",
@@ -219,7 +200,6 @@ namespace BookStore.Services.Tests
             _mockUnitOfWork.Setup(u => u.Inventories.AddAsync(It.IsAny<Inventory>()))
                 .ThrowsAsync(new InvalidOperationException("Database error"));
 
-            // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(
                 () => _service.CreateInventoryAsync(createDto)
             );
@@ -228,7 +208,6 @@ namespace BookStore.Services.Tests
         [Fact]
         public async Task GetInventoryByBookAsync_WithInvalidIsbn_ReturnsEmptyList()
         {
-            // Arrange
             string invalidIsbn = "999-9-999999-99-9";
             var emptyInventories = new List<Inventory>();
             var expectedDtos = new List<InventoryDto>();
@@ -238,10 +217,8 @@ namespace BookStore.Services.Tests
             _mockMapper.Setup(m => m.Map<IEnumerable<InventoryDto>>(emptyInventories))
                 .Returns(expectedDtos);
 
-            // Act
             var result = await _service.GetInventoryByBookAsync(invalidIsbn);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Empty(result);
         }
@@ -249,7 +226,6 @@ namespace BookStore.Services.Tests
         [Fact]
         public async Task DeleteInventoryAsync_WithInvalidId_DeletesAnyway()
         {
-            // Arrange
             int invalidId = 999;
 
             _mockUnitOfWork.Setup(u => u.Inventories.DeleteAsync(invalidId))
@@ -257,10 +233,8 @@ namespace BookStore.Services.Tests
             _mockUnitOfWork.Setup(u => u.SaveChangesAsync())
                 .ReturnsAsync(1);
 
-            // Act
             await _service.DeleteInventoryAsync(invalidId);
 
-            // Assert
             _mockUnitOfWork.Verify(u => u.Inventories.DeleteAsync(invalidId), Times.Once);
             _mockUnitOfWork.Verify(u => u.SaveChangesAsync(), Times.Once);
         }

@@ -7,7 +7,7 @@ using BookStore.Repositories.Interfaces;
 using BookStore.Services.Implementations;
 using BookStore.Exceptions;
 
-namespace BookStore.Services.Tests
+namespace BookStore.Tests.Services
 {
     public class BookconditionServiceTests
     {
@@ -22,12 +22,10 @@ namespace BookStore.Services.Tests
             _service = new BookConditionService(_mockUnitOfWork.Object, _mockMapper.Object);
         }
 
-        // ===== POSITIVE TEST CASES =====
 
         [Fact]
         public async Task GetAllConditionsAsync_WithValidData_ReturnsAllConditions()
         {
-            // Arrange
             var bookConditions = new List<Bookcondition>
             {
                 new() { Ranks = 1, Description = "New", Price = 100 },
@@ -46,10 +44,8 @@ namespace BookStore.Services.Tests
             _mockMapper.Setup(m => m.Map<IEnumerable<BookConditionDto>>(bookConditions))
                 .Returns(expectedDtos);
 
-            // Act
             var result = await _service.GetAllConditionsAsync();
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(3, result.Count());
             Assert.Equal(expectedDtos, result);
@@ -59,7 +55,6 @@ namespace BookStore.Services.Tests
         [Fact]
         public async Task GetConditionByRankAsync_WithValidRank_ReturnsConditionDto()
         {
-            // Arrange
             int rank = 1;
             var bookCondition = new Bookcondition
             {
@@ -80,10 +75,8 @@ namespace BookStore.Services.Tests
             _mockMapper.Setup(m => m.Map<BookConditionDto>(bookCondition))
                 .Returns(expectedDto);
 
-            // Act
             var result = await _service.GetConditionByRankAsync(rank);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(expectedDto.Ranks, result.Ranks);
             Assert.Equal(expectedDto.Description, result.Description);
@@ -93,7 +86,6 @@ namespace BookStore.Services.Tests
         [Fact]
         public async Task GetAllConditionsAsync_WithEmptyList_ReturnsEmptyEnumerable()
         {
-            // Arrange
             var emptyConditions = new List<Bookcondition>();
             var expectedDtos = new List<BookConditionDto>();
 
@@ -102,10 +94,8 @@ namespace BookStore.Services.Tests
             _mockMapper.Setup(m => m.Map<IEnumerable<BookConditionDto>>(emptyConditions))
                 .Returns(expectedDtos);
 
-            // Act
             var result = await _service.GetAllConditionsAsync();
 
-            // Assert
             Assert.NotNull(result);
             Assert.Empty(result);
         }
@@ -113,7 +103,6 @@ namespace BookStore.Services.Tests
         [Fact]
         public async Task GetConditionByRankAsync_WithDifferentValidRanks_ReturnsCorrectCondition()
         {
-            // Arrange
             int rank = 5;
             var bookCondition = new Bookcondition
             {
@@ -133,26 +122,21 @@ namespace BookStore.Services.Tests
             _mockMapper.Setup(m => m.Map<BookConditionDto>(bookCondition))
                 .Returns(expectedDto);
 
-            // Act
             var result = await _service.GetConditionByRankAsync(rank);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(5, result.Ranks);
             Assert.Equal("Poor", result.Description);
         }
-
-        // ===== NEGATIVE TEST CASES =====
+        
 
         [Fact]
         public async Task GetConditionByRankAsync_WithInvalidRank_ThrowsNotFoundException()
         {
-            // Arrange
             int invalidRank = 999;
             _mockUnitOfWork.Setup(u => u.BookConditions.GetByIdAsync(invalidRank))
                 .ReturnsAsync((Bookcondition)null);
 
-            // Act & Assert
             var exception = await Assert.ThrowsAsync<NotFoundException>(
                 () => _service.GetConditionByRankAsync(invalidRank)
             );
@@ -162,12 +146,10 @@ namespace BookStore.Services.Tests
         [Fact]
         public async Task GetConditionByRankAsync_WithNegativeRank_ThrowsNotFoundException()
         {
-            // Arrange
             int negativeRank = -1;
             _mockUnitOfWork.Setup(u => u.BookConditions.GetByIdAsync(negativeRank))
                 .ReturnsAsync((Bookcondition)null);
 
-            // Act & Assert
             await Assert.ThrowsAsync<NotFoundException>(
                 () => _service.GetConditionByRankAsync(negativeRank)
             );
@@ -176,12 +158,10 @@ namespace BookStore.Services.Tests
         [Fact]
         public async Task GetConditionByRankAsync_WithZeroRank_ThrowsNotFoundException()
         {
-            // Arrange
             int zeroRank = 0;
             _mockUnitOfWork.Setup(u => u.BookConditions.GetByIdAsync(zeroRank))
                 .ReturnsAsync((Bookcondition)null);
 
-            // Act & Assert
             await Assert.ThrowsAsync<NotFoundException>(
                 () => _service.GetConditionByRankAsync(zeroRank)
             );
@@ -190,11 +170,9 @@ namespace BookStore.Services.Tests
         [Fact]
         public async Task GetAllConditionsAsync_WhenRepositoryThrowsException_PropagatesException()
         {
-            // Arrange
             _mockUnitOfWork.Setup(u => u.BookConditions.GetAllAsync())
                 .ThrowsAsync(new InvalidOperationException("Database error"));
 
-            // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(
                 () => _service.GetAllConditionsAsync()
             );
