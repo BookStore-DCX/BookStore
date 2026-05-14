@@ -1,4 +1,4 @@
-﻿using BookStore.DTOs.ShoppingCart;
+﻿using BookStore.DTOs.PurchaseLog;
 
 namespace BookStore.Services.Interfaces
 {

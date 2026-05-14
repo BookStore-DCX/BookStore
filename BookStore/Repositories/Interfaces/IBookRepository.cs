@@ -7,13 +7,8 @@ namespace BookStore.Repositories.Interfaces
 	public interface IBookRepository : IGenericRepository<Book>
 	{
 		Task<Book?> GetBookWithDetailsAsync(string isbn);
-		Task<Book?> GetBookWithDetailsByTitleAsync(string title);
-		Task<Book?> GetByTitleAsync(string title);
-		Task<IEnumerable<Book>> GetBooksByCategoryAsync(int categoryId);
-		Task<IEnumerable<Book>> GetBooksByPublisherAsync(int publisherId);
-		Task<IEnumerable<Book>> SearchBooksAsync(string searchTerm);
-		Task<IEnumerable<Book>> GetBooksByAuthorAsync(string authorName);
-		Task DeleteByTitleAsync(string title);
-		Task<bool> ExistsByTitleAsync(string title);
+		Task<IEnumerable<Book>> GetBooksByCategoryAsync(string categoryName);
+		Task<IEnumerable<Book>> GetBooksByAuthorAsync(int authorId);
+		Task<IEnumerable<Book>> SearchBooksAsync(string? authorName, string? title, string? description);
 	}
 }

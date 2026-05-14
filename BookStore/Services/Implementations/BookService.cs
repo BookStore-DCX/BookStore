@@ -28,14 +28,14 @@ namespace BookStore.Services.Implementations
 			return _mapper.Map<BookDto>(book);
 		}
 
-		public async Task<IEnumerable<BookDto>> GetBooksByCategoryAsync(int categoryId)
-			=> _mapper.Map<IEnumerable<BookDto>>(await _uow.Books.GetBooksByCategoryAsync(categoryId));
+		public async Task<IEnumerable<BookDto>> GetBooksByCategoryAsync(string categoryName)
+			=> _mapper.Map<IEnumerable<BookDto>>(await _uow.Books.GetBooksByCategoryAsync(categoryName));
 
-		public async Task<IEnumerable<BookDto>> GetBooksByPublisherAsync(int publisherId)
-			=> _mapper.Map<IEnumerable<BookDto>>(await _uow.Books.GetBooksByPublisherAsync(publisherId));
+		public async Task<IEnumerable<BookDto>> GetBooksByAuthorAsync(int authorId)
+			=> _mapper.Map<IEnumerable<BookDto>>(await _uow.Books.GetBooksByAuthorAsync(authorId));
 
-		public async Task<IEnumerable<BookDto>> SearchBooksAsync(string searchTerm)
-			=> _mapper.Map<IEnumerable<BookDto>>(await _uow.Books.SearchBooksAsync(searchTerm));
+		public async Task<IEnumerable<BookDto>> SearchBooksAsync(string? authorName, string? title, string? description)
+			=> _mapper.Map<IEnumerable<BookDto>>(await _uow.Books.SearchBooksAsync(authorName, title, description));
 
 		public async Task<BookDto> CreateBookAsync(BookCreateDto dto)
 		{
@@ -66,5 +66,4 @@ namespace BookStore.Services.Implementations
 			await _uow.SaveChangesAsync();
 		}
 	}
-
 }

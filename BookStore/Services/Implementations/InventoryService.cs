@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookStore.DTOs.Inventory;
+using BookStore.Exceptions;
 using BookStore.Models;
 using BookStore.Repositories.Interfaces;
 using BookStore.Services.Interfaces;
@@ -35,11 +36,36 @@ namespace BookStore.Services.Implementations
             return _mapper.Map<InventoryDto>(inventory);
         }
 
+        public async Task<InventoryDto> UpdateInventoryAsync(int id, InventoryUpdateDto dto)
+        {
+            var inventory = await _uow.Inventories.GetByIdAsync(id)
+                ?? throw new NotFoundException($"Inventory ID {id} not found");
+
+            if (!string.IsNullOrWhiteSpace(dto.Isbn))
+            {
+                inventory.Isbn = dto.Isbn;
+            }
+
+            if (dto.Ranks.HasValue)
+            {
+                inventory.Ranks = dto.Ranks.Value;
+            }
+
+            if (dto.Purchased.HasValue)
+            {
+                inventory.Purchased = dto.Purchased.Value;
+            }
+
+            await _uow.Inventories.UpdateAsync(inventory);
+            await _uow.SaveChangesAsync();
+
+            return _mapper.Map<InventoryDto>(inventory);
+        }
+
         public async Task DeleteInventoryAsync(int id)
         {
             await _uow.Inventories.DeleteAsync(id);
             await _uow.SaveChangesAsync();
         }
     }
-
 }

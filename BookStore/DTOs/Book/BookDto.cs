@@ -10,6 +10,7 @@
 		public string? Edition { get; set; }
 		public int PublisherId { get; set; }
 		public string? PublisherName { get; set; }
+		public int InventoryCount { get; set; }
 	}
 }
 

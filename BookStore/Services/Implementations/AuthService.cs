@@ -35,11 +35,11 @@ namespace BookStore.Services.Implementations
 
             return new AuthResponseDto
             {
+                UserId = user.UserId,
                 Token = _jwt.GenerateToken(user),
                 UserName = user.UserName,
                 Role = user.RoleNumberNavigation?.PermRole1 ?? "Guest",
                 Expiry = DateTime.UtcNow.AddMinutes(60),
-
             };
         }
 

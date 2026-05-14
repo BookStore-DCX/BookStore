@@ -35,6 +35,7 @@ namespace BookStore.Middleware
 		{
 			var statusCode = exception switch
 			{
+				BadRequestException => HttpStatusCode.BadRequest,
 				NotFoundException => HttpStatusCode.NotFound,
 				ConflictException => HttpStatusCode.Conflict,
 				UnauthorizedException => HttpStatusCode.Unauthorized,

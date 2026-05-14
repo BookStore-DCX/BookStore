@@ -7,7 +7,7 @@ namespace BookStore.Services.Interfaces
 		Task<IEnumerable<AuthorDto>> GetAllAuthorsAsync();
 		Task<IEnumerable<AuthorDto>> SearchAuthorsAsync(string searchTerm);
 		Task<AuthorDto> CreateAuthorAsync(AuthorCreateDto dto);
-		Task<AuthorDto> UpdateAuthorAsync(string authorName, AuthorCreateDto dto);
-		Task DeleteAuthorAsync(string authorName);
+		Task<AuthorDto> UpdateAuthorAsync(int authorId, AuthorCreateDto dto);
+		Task DeleteAuthorAsync(int authorId);
 	}
 }

@@ -24,6 +24,7 @@ namespace BookStore.Services.Implementations
             var claims = new[]
             {
             new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new Claim("userId", user.UserId.ToString()),
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Role, roleName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())

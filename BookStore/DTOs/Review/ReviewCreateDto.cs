@@ -1,10 +1,8 @@
-﻿namespace BookStore.DTOs.Review
+namespace BookStore.DTOs.Review
 {
-    public class ReviewDto
+    public class ReviewCreateDto
     {
         public string Isbn { get; set; } = string.Empty;
-        public string? BookName { get; set; }
-        public int ReviewerId { get; set; }
         public int? Rating { get; set; }
         public string? Comments { get; set; }
     }

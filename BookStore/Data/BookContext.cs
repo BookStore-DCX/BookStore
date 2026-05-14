@@ -226,7 +226,7 @@ public partial class BookContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("PublisherID");
             entity.Property(e => e.City).HasMaxLength(30);
-            entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.Name).HasMaxLength(100);;
             entity.Property(e => e.StateCode)
                 .HasMaxLength(2)
                 .IsUnicode(false);

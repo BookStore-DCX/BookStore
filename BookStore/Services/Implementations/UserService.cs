@@ -43,12 +43,23 @@ namespace BookStore.Services.Implementations
             return user;
         }
 
-        public async Task<UserDto> UpdateUserAsync(int userId, UserUpdateDto dto)
+        public async Task<IEnumerable<UserDto>> GetUsersByRoleAsync(string roleName)
         {
-            var user = await _uow.Users.GetByIdAsync(userId);
+            var roleExists = await _uow.Users.RoleNameExistsAsync(roleName);
+            if (!roleExists)
+            {
+                throw new KeyNotFoundException($"Role '{roleName}' not found");
+            }
+
+            return await _uow.Users.GetUsersByRoleNameAsync(roleName);
+        }
+
+        public async Task<UserDto> UpdateUserAsync(string username, UserUpdateDto dto)
+        {
+            var user = await _uow.Users.GetUserByUsernameAsync(username);
             if (user == null)
             {
-                throw new KeyNotFoundException($"User with ID {userId} not found");
+                throw new KeyNotFoundException($"User '{username}' not found");
             }
 
             _mapper.Map(dto, user);
@@ -65,37 +76,26 @@ namespace BookStore.Services.Implementations
             await _uow.Users.UpdateAsync(user);
             await _uow.SaveChangesAsync();
 
-            var updated = await _uow.Users.GetByIdWithRoleNameAsync(userId);
+            var updated = await _uow.Users.GetUserByUsernameWithRoleNameAsync(username);
             if (updated == null)
             {
-                throw new KeyNotFoundException($"User with ID {userId} not found");
+                throw new KeyNotFoundException($"User '{username}' not found");
             }
 
             return updated;
         }
 
-        public async Task<bool> DeleteUserAsync(int userId)
+        public async Task<bool> DeleteUserAsync(string username)
         {
-            bool isExist = await _uow.Users.ExistsAsync(userId);
-            if (isExist == false)
+            var user = await _uow.Users.GetUserByUsernameAsync(username);
+            if (user == null)
             {
-                throw new KeyNotFoundException($"User with ID {userId} not found");
+                throw new KeyNotFoundException($"User '{username}' not found");
             }
 
-            await _uow.Users.DeleteAsync(userId);
+            await _uow.Users.DeleteAsync(user.UserId);
             await _uow.SaveChangesAsync();
             return true;
-        }
-
-        public async Task<IEnumerable<UserDto>> GetUsersByRoleAsync(int roleNumber)
-        {
-            var roleExists = await _uow.Users.RoleExistsAsync(roleNumber);
-            if (!roleExists)
-            {
-                throw new KeyNotFoundException($"Role number {roleNumber} not found");
-            }
-
-            return await _uow.Users.GetUsersByRoleWithRoleNameAsync(roleNumber);
         }
     }
 }

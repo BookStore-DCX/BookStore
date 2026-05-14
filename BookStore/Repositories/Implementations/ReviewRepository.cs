@@ -16,15 +16,42 @@ namespace BookStore.Repositories.Implementations
 
         public async Task<IEnumerable<Bookreview>> GetReviewsByBookNameAsync(string bookName)
             => await _dbSet.AsNoTracking()
-                .Join(_context.Books,
-                    r => r.Isbn,
-                    b => b.Isbn,
-                    (r, b) => new { Review = r, Book = b })
-                .Where(x => x.Book.Title == bookName)
-                .Select(x => x.Review)
+                .Include(r => r.IsbnNavigation)
+                .Where(r => r.IsbnNavigation.Title == bookName)
+                .ToListAsync();
+
+        public async Task<IEnumerable<Bookreview>> GetReviewsByBookIsbnAsync(string isbn)
+            => await _dbSet.AsNoTracking()
+                .Include(r => r.IsbnNavigation)
+                .Where(r => r.Isbn == isbn)
                 .ToListAsync();
 
         public async Task<IEnumerable<Bookreview>> GetReviewsByReviewerAsync(int reviewerId)
             => await _dbSet.AsNoTracking().Where(r => r.ReviewerId == reviewerId).ToListAsync();
+
+        public async Task<Reviewer?> GetReviewerByNameAsync(string fullName)
+            => await _context.Reviewers.AsNoTracking()
+                .FirstOrDefaultAsync(r => r.Name == fullName);
+
+        public async Task<int> GetNextReviewerIdAsync()
+        {
+            var maxId = await _context.Reviewers.MaxAsync(r => (int?)r.ReviewerId) ?? 0;
+            return maxId + 1;
+        }
+
+        public Task AddReviewerAsync(Reviewer reviewer)
+        {
+            _context.Reviewers.Add(reviewer);
+            return Task.CompletedTask;
+        }
+
+        public async Task DeleteReviewAsync(string isbn, int reviewerId)
+        {
+            var review = await _dbSet.FirstOrDefaultAsync(r => r.Isbn == isbn && r.ReviewerId == reviewerId);
+            if (review != null)
+            {
+                _dbSet.Remove(review);
+            }
+        }
     }
 }

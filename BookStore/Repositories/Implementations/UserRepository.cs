@@ -62,6 +62,11 @@ namespace BookStore.Repositories.Implementations
             return await _context.Permroles.AnyAsync(r => r.RoleNumber == roleNumber);
         }
 
+        public async Task<bool> RoleNameExistsAsync(string roleName)
+        {
+            return await _context.Permroles.AnyAsync(r => r.PermRole1 == roleName);
+        }
+
         public async Task<IEnumerable<UserDto>> GetAllWithRoleNameAsync()
         {
             return await UserWithRoleNameQuery().ToListAsync();
@@ -81,6 +86,13 @@ namespace BookStore.Repositories.Implementations
         {
             return await UserWithRoleNameQuery()
                 .Where(u => u.RoleNumber == roleNumber)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<UserDto>> GetUsersByRoleNameAsync(string roleName)
+        {
+            return await UserWithRoleNameQuery()
+                .Where(u => u.RoleName == roleName)
                 .ToListAsync();
         }
     }

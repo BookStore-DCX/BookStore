@@ -21,33 +21,30 @@ namespace BookStore.Services.Implementations
         public async Task<IEnumerable<PublisherDto>> GetAllPublishersAsync()
         {
             var publishers = await _uow.Publishers.GetAllAsync();
+            return _mapper.Map<IEnumerable<PublisherDto>>(publishers);
+        }
 
+        public async Task<IEnumerable<PublisherDto>> GetPublishersByNameAsync(string name)
+        {
+            var publishers = await _uow.Publishers.GetPublishersByNameAsync(name);
             return _mapper.Map<IEnumerable<PublisherDto>>(publishers);
         }
 
         public async Task<PublisherDto> GetPublisherByIdAsync(int id)
         {
             var publisher = await _uow.Publishers.GetByIdAsync(id)
-                ?? throw new NotFoundException(
-                    $"Publisher with ID {id} not found"
-                );
+                ?? throw new NotFoundException($"Publisher with ID {id} not found");
 
             return _mapper.Map<PublisherDto>(publisher);
         }
 
-        public async Task<IEnumerable<PublisherDto>> GetPublishersByStateAsync(
-            string stateCode
-        )
+        public async Task<IEnumerable<PublisherDto>> GetPublishersByStateAsync(string stateCode)
         {
-            var publishers = await _uow.Publishers
-                .GetPublishersByStateAsync(stateCode);
-
+            var publishers = await _uow.Publishers.GetPublishersByStateAsync(stateCode);
             return _mapper.Map<IEnumerable<PublisherDto>>(publishers);
         }
 
-        public async Task<PublisherDto> CreatePublisherAsync(
-            PublisherCreateDto dto
-        )
+        public async Task<PublisherDto> CreatePublisherAsync(PublisherCreateDto dto)
         {
             var publisher = _mapper.Map<Publisher>(dto);
 
@@ -57,15 +54,10 @@ namespace BookStore.Services.Implementations
             return _mapper.Map<PublisherDto>(publisher);
         }
 
-        public async Task<PublisherDto> UpdatePublisherAsync(
-            int id,
-            PublisherCreateDto dto
-        )
+        public async Task<PublisherDto> UpdatePublisherAsync(int id, PublisherCreateDto dto)
         {
             var publisher = await _uow.Publishers.GetByIdAsync(id)
-                ?? throw new NotFoundException(
-                    $"Publisher with ID {id} not found"
-                );
+                ?? throw new NotFoundException($"Publisher with ID {id} not found");
 
             _mapper.Map(dto, publisher);
 
@@ -79,9 +71,7 @@ namespace BookStore.Services.Implementations
         {
             if (!await _uow.Publishers.ExistsAsync(id))
             {
-                throw new NotFoundException(
-                    $"Publisher with ID {id} not found"
-                );
+                throw new NotFoundException($"Publisher with ID {id} not found");
             }
 
             await _uow.Publishers.DeleteAsync(id);

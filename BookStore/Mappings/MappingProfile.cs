@@ -49,11 +49,15 @@ namespace BookStore.Mappings
 
             CreateMap<ShoppingCartCreateDto, Shoppingcart>();
 
-            CreateMap<Purchaselog, PurchaseLogDto>().ReverseMap();
+            CreateMap<Purchaselog, DTOs.PurchaseLog.PurchaseLogDto>().ReverseMap();
 
-            CreateMap<PurchaseLogCreateDto, Purchaselog>();
+            CreateMap<DTOs.PurchaseLog.PurchaseLogCreateDto, Purchaselog>();
 
-            CreateMap<Bookreview, ReviewDto>().ReverseMap();
+            CreateMap<Bookreview, ReviewDto>()
+                .ForMember(
+                    d => d.BookName,
+                    o => o.MapFrom(s => s.IsbnNavigation != null ? s.IsbnNavigation.Title : null))
+                .ReverseMap();
 
             CreateMap<Bookcondition, BookConditionDto>();
 
@@ -73,7 +77,10 @@ namespace BookStore.Mappings
                     o => o.MapFrom(s => s.CategoryNavigation != null ? s.CategoryNavigation.CatDescription : null))
                 .ForMember(
                     d => d.PublisherName,
-                    o => o.MapFrom(s => s.Publisher != null ? s.Publisher.Name : null));
+                    o => o.MapFrom(s => s.Publisher != null ? s.Publisher.Name : null))
+                .ForMember(
+                    d => d.InventoryCount,
+                    o => o.MapFrom(s => s.Inventories.Count(i => i.Purchased == 0)));
 
             CreateMap<BookCreateDto, Book>();
 
@@ -84,6 +91,16 @@ namespace BookStore.Mappings
             CreateMap<AuthorCreateDto, Author>();
 
             CreateMap<Bookauthor, BookAuthorDto>().ReverseMap();
+
+            CreateMap<Inventory, BookCopyDto>()
+                .ForMember(d => d.Condition, o => o.MapFrom(s => s.RanksNavigation!.Description))
+                .ForMember(d => d.Price, o => o.MapFrom(s => s.RanksNavigation!.Price));
+
+            CreateMap<Book, BookDetailDto>()
+                .ForMember(d => d.Category, o => o.MapFrom(s => s.CategoryNavigation!.CatDescription))
+                .ForMember(d => d.Publisher, o => o.MapFrom(s => s.Publisher!.Name))
+                .ForMember(d => d.Authors, o => o.MapFrom(s => s.Bookauthors.Select(a => $"{a.Author.FirstName} {a.Author.LastName}".Trim())))
+                .ForMember(d => d.Copies, o => o.MapFrom(s => s.Inventories));
         }
     }
 }

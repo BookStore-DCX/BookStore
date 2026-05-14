@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using BookStore.DTOs.ShoppingCart;
+using BookStore.DTOs.PurchaseLog;
 using BookStore.Models;
 using BookStore.Repositories.Interfaces;
 using BookStore.Services.Interfaces;
 
-namespace BookStoreProjectApi.Services.Implementations
+namespace BookStore.Services.Implementations
 {
-    public class PurchaseLogService:IPurchaseLogService
+    public class PurchaseLogService : IPurchaseLogService
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;

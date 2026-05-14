@@ -40,7 +40,28 @@ namespace BookStore.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{name}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByName(string name)
+        {
+            var pubs = await _uow.Publishers.GetPublishersByNameAsync(name);
+
+            if (!pubs.Any())
+            {
+                return NotFound(
+                    ApiResponse<string>.Fail($"No publishers found matching '{name}'.")
+                );
+            }
+
+            return Ok(
+                ApiResponse<IEnumerable<PublisherDto>>.Ok(
+                    _mapper.Map<IEnumerable<PublisherDto>>(pubs)
+                )
+            );
+        }
+
+
+        [HttpGet("{id:int}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetById(int id)
         {
@@ -101,6 +122,39 @@ namespace BookStore.Controllers
                     _mapper.Map<PublisherDto>(pub)
                 )
             );
+        }
+
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = "StoreOwner,Admin")]
+        public async Task<IActionResult> Update(int id, [FromBody] PublisherCreateDto dto)
+        {
+            var publisher = await _uow.Publishers.GetByIdAsync(id);
+
+            if (publisher == null)
+            {
+                return NotFound(ApiResponse<string>.Fail($"Publisher with ID {id} not found"));
+            }
+
+            _mapper.Map(dto, publisher);
+            await _uow.Publishers.UpdateAsync(publisher);
+            await _uow.SaveChangesAsync();
+
+            return Ok(ApiResponse<PublisherDto>.Ok(_mapper.Map<PublisherDto>(publisher)));
+        }
+
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "StoreOwner,Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!await _uow.Publishers.ExistsAsync(id))
+            {
+                return NotFound(ApiResponse<string>.Fail($"Publisher with ID {id} not found"));
+            }
+
+            await _uow.Publishers.DeleteAsync(id);
+            await _uow.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

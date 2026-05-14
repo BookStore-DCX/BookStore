@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookStore.DTOs.Review;
+using BookStore.Exceptions;
 using BookStore.Models;
 using BookStore.Repositories.Interfaces;
 using BookStore.Services.Interfaces;
@@ -20,20 +21,48 @@ namespace BookStore.Services.Implementations
         public async Task<IEnumerable<ReviewDto>> GetReviewsByBookNameAsync(string bookName)
             => _mapper.Map<IEnumerable<ReviewDto>>(await _uow.Reviews.GetReviewsByBookNameAsync(bookName));
 
-        public async Task<IEnumerable<ReviewDto>> GetReviewsByReviewerAsync(int reviewerId)
-            => _mapper.Map<IEnumerable<ReviewDto>>(await _uow.Reviews.GetReviewsByReviewerAsync(reviewerId));
+        public async Task<IEnumerable<ReviewDto>> GetReviewsByBookIsbnAsync(string isbn)
+            => _mapper.Map<IEnumerable<ReviewDto>>(await _uow.Reviews.GetReviewsByBookIsbnAsync(isbn));
 
-        public async Task<ReviewDto> CreateReviewAsync(ReviewDto dto)
+        public async Task<ReviewDto> CreateReviewAsync(int userId, ReviewCreateDto dto)
         {
-            var review = _mapper.Map<Bookreview>(dto);
+            var user = await _uow.Users.GetByIdAsync(userId)
+                ?? throw new NotFoundException($"User with ID {userId} not found");
+
+            var fullName = $"{user.FirstName} {user.LastName}".Trim();
+
+            var reviewer = await _uow.Reviews.GetReviewerByNameAsync(fullName);
+            if (reviewer == null)
+            {
+                var newReviewerId = await _uow.Reviews.GetNextReviewerIdAsync();
+                reviewer = new Reviewer
+                {
+                    ReviewerId = newReviewerId,
+                    Name = fullName,
+                    EmployedBy = null
+                };
+
+                await _uow.Reviews.AddReviewerAsync(reviewer);
+                await _uow.SaveChangesAsync();
+            }
+
+            var review = new Bookreview
+            {
+                Isbn = dto.Isbn,
+                ReviewerId = reviewer.ReviewerId,
+                Rating = dto.Rating,
+                Comments = dto.Comments
+            };
+
             await _uow.Reviews.AddAsync(review);
             await _uow.SaveChangesAsync();
+
             return _mapper.Map<ReviewDto>(review);
         }
 
-        public async Task DeleteReviewAsync(string bookName, int reviewerId)
+        public async Task DeleteReviewAsync(string isbn, int reviewerId)
         {
-            await _uow.Reviews.DeleteAsync(bookName, reviewerId);
+            await _uow.Reviews.DeleteReviewAsync(isbn, reviewerId);
             await _uow.SaveChangesAsync();
         }
     }

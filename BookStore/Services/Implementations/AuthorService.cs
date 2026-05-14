@@ -18,7 +18,13 @@ namespace BookStore.Services.Implementations
 		}
 		public async Task<IEnumerable<AuthorDto>> GetAllAuthorsAsync()
 			=> _mapper.Map<IEnumerable<AuthorDto>>(await _uow.Authors.GetAllAsync());
-		public async Task<IEnumerable<AuthorDto>> SearchAuthorsAsync(string searchTerm)
+		public async Task<AuthorDto> GetAuthorByIdAsync(int authorId)
+		{
+			var author = await _uow.Authors.GetByIdAsync(authorId)
+				?? throw new NotFoundException($"Author ID {authorId} not found");
+			return _mapper.Map<AuthorDto>(author);
+        }
+        public async Task<IEnumerable<AuthorDto>> SearchAuthorsAsync(string searchTerm)
 			=> _mapper.Map<IEnumerable<AuthorDto>>(await _uow.Authors.SearchAuthorsAsync(searchTerm));
 		public async Task<AuthorDto> CreateAuthorAsync(AuthorCreateDto dto)
 		{
@@ -27,22 +33,22 @@ namespace BookStore.Services.Implementations
 			await _uow.SaveChangesAsync();
 			return _mapper.Map<AuthorDto>(author);
 		}
-		public async Task<AuthorDto> UpdateAuthorAsync(string authorName, AuthorCreateDto dto)
+		public async Task<AuthorDto> UpdateAuthorAsync(int authorId, AuthorCreateDto dto)
 		{
-			var author = await _uow.Authors.GetByNameAsync(authorName)
-				?? throw new NotFoundException($"Author '{authorName}' not found");
+			var author = await _uow.Authors.GetByIdAsync(authorId)
+				?? throw new NotFoundException($"Author ID {authorId} not found");
 			_mapper.Map(dto, author);
 			await _uow.Authors.UpdateAsync(author);
 			await _uow.SaveChangesAsync();
 			return _mapper.Map<AuthorDto>(author);
 		}
-		public async Task DeleteAuthorAsync(string authorName)
+		public async Task DeleteAuthorAsync(int authorId)
 		{
-			if (!await _uow.Authors.ExistsByNameAsync(authorName))
+			if (!await _uow.Authors.ExistsAsync(authorId))
 			{
-				throw new NotFoundException($"Author '{authorName}' not found");
+				throw new NotFoundException($"Author ID {authorId} not found");
 			}
-			await _uow.Authors.DeleteByNameAsync(authorName);
+			await _uow.Authors.DeleteAsync(authorId);
 			await _uow.SaveChangesAsync();
 		}
 	}

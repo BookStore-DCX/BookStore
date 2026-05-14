@@ -22,7 +22,17 @@ public class AuthorController : ControllerBase
 		var authors = await _uow.Authors.GetAllAsync();
 		return Ok(ApiResponse<IEnumerable<AuthorDto>>.Ok(_mapper.Map<IEnumerable<AuthorDto>>(authors)));
 	}
-	[HttpGet("search/{authorName}")]
+
+    [HttpGet("{id:int}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var author = await _uow.Authors.GetByIdAsync(id);
+        if (author == null) throw new NotFoundException($"Author ID {id} not found");
+        return Ok(ApiResponse<AuthorDto>.Ok(_mapper.Map<AuthorDto>(author)));
+    }
+
+    [HttpGet("search/{authorName}")]
 	[AllowAnonymous]
 	public async Task<IActionResult> GetByName(string authorName)
 	{
@@ -41,24 +51,24 @@ public class AuthorController : ControllerBase
 			ApiResponse<AuthorDto>.Created(_mapper.Map<AuthorDto>(author)));
 	}
 
-	[HttpPut("name/{authorName}")]
+	[HttpPut("{id:int}")]
 	[Authorize(Roles = "Admin, StoreOwner")]
-	public async Task<IActionResult> Update(string authorName, [FromBody] AuthorCreateDto dto)
+	public async Task<IActionResult> Update(int id, [FromBody] AuthorCreateDto dto)
 	{
-		var author = await _uow.Authors.GetByNameAsync(authorName)
-			?? throw new NotFoundException($"Author '{authorName}' not found");
+		var author = await _uow.Authors.GetByIdAsync(id)
+			?? throw new NotFoundException($"Author ID {id} not found");
 		_mapper.Map(dto, author);
 		await _uow.Authors.UpdateAsync(author);
 		await _uow.SaveChangesAsync();
 		return Ok(ApiResponse<AuthorDto>.Ok(_mapper.Map<AuthorDto>(author)));
 	}
 
-	[HttpDelete("name/{authorName}")]
+	[HttpDelete("{id:int}")]
 	[Authorize(Roles = "Admin, StoreOwner")]
-	public async Task<IActionResult> Delete(string authorName)
+	public async Task<IActionResult> Delete(int id)
 	{
-		if (!await _uow.Authors.ExistsByNameAsync(authorName)) throw new NotFoundException($"Author '{authorName}' not found");
-		await _uow.Authors.DeleteByNameAsync(authorName);
+		if (!await _uow.Authors.ExistsAsync(id)) throw new NotFoundException($"Author ID {id} not found");
+		await _uow.Authors.DeleteAsync(id);
 		await _uow.SaveChangesAsync();
 		return NoContent();
 	}

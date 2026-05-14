@@ -6,5 +6,6 @@ namespace BookStore.Repositories.Interfaces
     public interface IPublisherRepository : IGenericRepository<Publisher>
     {
         Task<IEnumerable<Publisher>> GetPublishersByStateAsync(string stateCode);
+        Task<IEnumerable<Publisher>> GetPublishersByNameAsync(string name);
     }
 }

@@ -6,12 +6,11 @@ namespace BookStore.Services.Interfaces
 	{
 		Task<IEnumerable<BookDto>> GetAllBooksAsync();
 		Task<BookDto> GetBookByIsbnAsync(string isbn);
-		Task<IEnumerable<BookDto>> GetBooksByCategoryAsync(int categoryId);
-		Task<IEnumerable<BookDto>> GetBooksByPublisherAsync(int publisherId);
-		Task<IEnumerable<BookDto>> SearchBooksAsync(string searchTerm);
+		Task<IEnumerable<BookDto>> GetBooksByCategoryAsync(string categoryName);
+		Task<IEnumerable<BookDto>> GetBooksByAuthorAsync(int authorId);
+		Task<IEnumerable<BookDto>> SearchBooksAsync(string? authorName, string? title, string? description);
 		Task<BookDto> CreateBookAsync(BookCreateDto dto);
 		Task<BookDto> UpdateBookAsync(string isbn, BookUpdateDto dto);
 		Task DeleteBookAsync(string isbn);
 	}
-
 }

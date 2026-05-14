@@ -18,7 +18,6 @@ namespace BookStore.Controllers
             _userService = userService;
         }
 
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
         {
@@ -26,8 +25,21 @@ namespace BookStore.Controllers
             return Ok(ApiResponse<IEnumerable<UserDto>>.Ok(result));
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<UserDto>> GetUserById(int id)
+        {
+            try
+            {
+                var result = await _userService.GetUserByIdAsync(id);
+                return Ok(ApiResponse<UserDto>.Ok(result));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ApiResponse<string>.Fail(ex.Message));
+            }
+        }
 
-        [HttpGet("username/{username}")]
+        [HttpGet("{username}")]
         public async Task<ActionResult<UserDto>> GetUserByUsername(string username)
         {
             try
@@ -41,13 +53,12 @@ namespace BookStore.Controllers
             }
         }
 
-
-        [HttpGet("role/{roleNumber:int}")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersByRole(int roleNumber)
+        [HttpGet("role/{roleName}")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersByRole(string roleName)
         {
             try
             {
-                var result = await _userService.GetUsersByRoleAsync(roleNumber);
+                var result = await _userService.GetUsersByRoleAsync(roleName);
                 return Ok(ApiResponse<IEnumerable<UserDto>>.Ok(result));
             }
             catch (KeyNotFoundException ex)
@@ -56,13 +67,13 @@ namespace BookStore.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{username}")]
         [Authorize(Roles = "Admin, StoreManager, RegisteredUser")]
-        public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] UserUpdateDto dto)
+        public async Task<ActionResult<UserDto>> UpdateUser(string username, [FromBody] UserUpdateDto dto)
         {
             try
             {
-                var result = await _userService.UpdateUserAsync(id, dto);
+                var result = await _userService.UpdateUserAsync(username, dto);
                 return Ok(ApiResponse<UserDto>.Ok(result, "Updated"));
             }
             catch (KeyNotFoundException ex)
@@ -71,14 +82,13 @@ namespace BookStore.Controllers
             }
         }
 
-
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        [HttpDelete("{username}")]
+        public async Task<IActionResult> DeleteUser(string username)
         {
             try
             {
-                //var result = await _userService.DeleteUserAsync(id);
-                return Ok(ApiResponse<bool>.Ok(true, "Deleted"));
+                var result = await _userService.DeleteUserAsync(username);
+                return Ok(ApiResponse<bool>.Ok(result, "Deleted"));
             }
             catch (KeyNotFoundException ex)
             {
