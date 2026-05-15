@@ -7,8 +7,6 @@ namespace BookStore.Validators
     {
         public PublisherCreateDtoValidator()
         {
-            RuleFor(x => x.PublisherId).GreaterThan(0);
-
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .MaximumLength(50);

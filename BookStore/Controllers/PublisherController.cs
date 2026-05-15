@@ -41,7 +41,7 @@ namespace BookStore.Controllers
 
 
         [HttpGet("{name}")]
-        [AllowAnonymous]
+       [AllowAnonymous]
         public async Task<IActionResult> GetByName(string name)
         {
             var pubs = await _uow.Publishers.GetPublishersByNameAsync(name);
@@ -62,7 +62,7 @@ namespace BookStore.Controllers
 
 
         [HttpGet("{id:int}")]
-        [AllowAnonymous]
+       [AllowAnonymous]
         public async Task<IActionResult> GetById(int id)
         {
             var publisher = await _uow.Publishers.GetByIdAsync(id);
@@ -107,10 +107,18 @@ namespace BookStore.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "StoreOwner,Admin")]
+         [Authorize(Roles = "StoreOwner,Admin")]
         public async Task<IActionResult> Create([FromBody] PublisherCreateDto dto)
         {
+            var publishers = await _uow.Publishers.GetAllAsync();
+
+            int nextId = publishers.Any()
+                ? publishers.Max(p => p.PublisherId) + 1
+                : 1;
+
             var pub = _mapper.Map<Publisher>(dto);
+
+            pub.PublisherId = nextId;
 
             await _uow.Publishers.AddAsync(pub);
             await _uow.SaveChangesAsync();
@@ -125,7 +133,7 @@ namespace BookStore.Controllers
         }
 
         [HttpPut("{id:int}")]
-        [Authorize(Roles = "StoreOwner,Admin")]
+       [Authorize(Roles = "StoreOwner,Admin")]
         public async Task<IActionResult> Update(int id, [FromBody] PublisherCreateDto dto)
         {
             var publisher = await _uow.Publishers.GetByIdAsync(id);
@@ -143,7 +151,7 @@ namespace BookStore.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        [Authorize(Roles = "StoreOwner,Admin")]
+       [Authorize(Roles = "StoreOwner,Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             if (!await _uow.Publishers.ExistsAsync(id))
