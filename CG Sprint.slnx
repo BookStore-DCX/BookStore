@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="BookStore.Test/BookStore.Test.csproj" Id="7b5b98ae-090c-4156-a953-02d810a062d7" />
   <Project Path="BookStore/BookStore.csproj" />
+  <Project Path="BookStores.MVC/BookStores.MVC.csproj" Id="7efd3e8e-7a7b-436c-af90-8153214d1a5d" />
 </Solution>
