@@ -41,7 +41,7 @@
                 @foreach (var copy in Model.Copies)
                 {
                         <tr>
-                            <td>@(i++)</td> @* Display and increment: 1, 2, 3... *@
+                            <td>@(i++)</td>
                             <td>@(string.IsNullOrWhiteSpace(copy.Condition) ? "N/A" : copy.Condition)</td>
                             <td>@copy.Price?.ToString("C")</td>
                             <td>
