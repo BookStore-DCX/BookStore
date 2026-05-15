@@ -11,12 +11,14 @@
     <div class="mb-3">
         <label asp-for="City" class="form-label"></label>
         <input asp-for="City" class="form-control" />
+        <span asp-validation-for="City" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label asp-for="StateCode" class="form-label"></label>
         <select asp-for="StateCode" asp-items="ViewBag.States" class="form-select">
             <option value="">Choose state</option>
         </select>
+        <span asp-validation-for="StateCode" class="text-danger"></span>
     </div>
     <button class="btn btn-primary" type="submit">Save</button>
     <a class="btn btn-link" asp-action="Index">Cancel</a>

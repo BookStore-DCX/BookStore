@@ -4,6 +4,7 @@ using BookStore.Mvc.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.RegularExpressions;
 
 namespace BookStore.Mvc.Controllers;
 
@@ -89,21 +90,22 @@ public class BooksController : Controller
     [Authorize(Roles = "Admin,StoreOwner")]
     public async Task<IActionResult> Edit(string id)
     {
-        var result = await _bookService.GetByIsbnAsync(id);
-        if (!result.IsSuccess || result.Data is null)
+        var detailResult = await _bookService.GetByIsbnAsync(id);
+        if (!detailResult.IsSuccess || detailResult.Data is null)
         {
-            this.Error(result.Message);
+            this.Error(detailResult.Message);
             return RedirectToAction(nameof(Index));
         }
 
         await LoadDropDowns();
         return View(new BookFormViewModel
         {
-            Isbn = result.Data.Isbn,
-            Title = result.Data.Title,
-            Description = result.Data.Description,
-            Edition = string.Empty,
-            PublisherId = 0
+            Isbn = detailResult.Data.Isbn,
+            Title = detailResult.Data.Title,
+            Description = detailResult.Data.Description,
+            Category = detailResult.Data.CategoryId,
+            Edition = NormalizeEditionForNumericInput(detailResult.Data.Edition),
+            PublisherId = detailResult.Data.PublisherId
         });
     }
 
@@ -127,7 +129,7 @@ public class BooksController : Controller
         }
 
         this.Success("Book updated.");
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Details), new { id });
     }
 
     [HttpPost]
@@ -147,5 +149,44 @@ public class BooksController : Controller
         var publishers = await _publisherService.GetAllAsync();
         ViewBag.Categories = new SelectList(categories.Data ?? new(), "CatId", "CatDescription");
         ViewBag.Publishers = new SelectList(publishers.Data ?? new(), "PublisherId", "Name");
+    }
+
+    private static string? NormalizeEditionForNumericInput(string? edition)
+    {
+        if (string.IsNullOrWhiteSpace(edition))
+        {
+            return null;
+        }
+
+        var match = Regex.Match(edition, @"\d+");
+        if (match.Success)
+        {
+            return match.Value;
+        }
+
+        return edition.Trim().ToLowerInvariant() switch
+        {
+            "first" => "1",
+            "second" => "2",
+            "third" => "3",
+            "fourth" => "4",
+            "fifth" => "5",
+            "sixth" => "6",
+            "seventh" => "7",
+            "eighth" => "8",
+            "ninth" => "9",
+            "tenth" => "10",
+            "i" => "1",
+            "ii" => "2",
+            "iii" => "3",
+            "iv" => "4",
+            "v" => "5",
+            "vi" => "6",
+            "vii" => "7",
+            "viii" => "8",
+            "ix" => "9",
+            "x" => "10",
+            _ => null
+        };
     }
 }

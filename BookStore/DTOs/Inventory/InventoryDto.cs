@@ -4,6 +4,7 @@
     {
         public int InventoryId { get; set; }
         public string Isbn { get; set; } = string.Empty;
+        public string? BookTitle { get; set; }
         public int Ranks { get; set; }
         public string? ConditionDescription { get; set; }
         public byte? Purchased { get; set; }

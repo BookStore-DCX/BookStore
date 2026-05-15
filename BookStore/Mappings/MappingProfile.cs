@@ -63,6 +63,9 @@ namespace BookStore.Mappings
 
             CreateMap<Inventory, InventoryDto>()
                 .ForMember(
+                    d => d.BookTitle,
+                    o => o.MapFrom(s => s.IsbnNavigation != null ? s.IsbnNavigation.Title : null))
+                .ForMember(
                     d => d.ConditionDescription,
                     o => o.MapFrom(s => s.RanksNavigation != null ? s.RanksNavigation.Description : null))
                 .ForMember(
@@ -97,6 +100,9 @@ namespace BookStore.Mappings
                 .ForMember(d => d.Price, o => o.MapFrom(s => s.RanksNavigation!.Price));
 
             CreateMap<Book, BookDetailDto>()
+                .ForMember(d => d.Edition, o => o.MapFrom(s => s.Edition))
+                .ForMember(d => d.CategoryId, o => o.MapFrom(s => s.Category))
+                .ForMember(d => d.PublisherId, o => o.MapFrom(s => s.PublisherId))
                 .ForMember(d => d.Category, o => o.MapFrom(s => s.CategoryNavigation!.CatDescription))
                 .ForMember(d => d.Publisher, o => o.MapFrom(s => s.Publisher!.Name))
                 .ForMember(d => d.Authors, o => o.MapFrom(s => s.Bookauthors.Select(a => $"{a.Author.FirstName} {a.Author.LastName}".Trim())))

@@ -11,6 +11,12 @@ namespace BookStore.Repositories.Implementations
         {
         }
 
+        public override async Task<IEnumerable<Inventory>> GetAllAsync()
+            => await _dbSet.AsNoTracking()
+                .Include(i => i.IsbnNavigation)
+                .Include(i => i.RanksNavigation)
+                .ToListAsync();
+
         public async Task<IEnumerable<Inventory>> GetInventoryByBookAsync(string isbn)
             => await _dbSet.AsNoTracking()
                 .Join(

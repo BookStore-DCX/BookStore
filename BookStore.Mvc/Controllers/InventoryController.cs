@@ -58,11 +58,14 @@ public class InventoryController : Controller
 
     public async Task<IActionResult> Edit(int id, string isbn, int ranks, byte? purchased)
     {
-        await LoadDropDowns();
+        var books = await _bookService.GetAllAsync();
+        var bookTitle = books.Data?.FirstOrDefault(b => b.Isbn == isbn)?.Title ?? isbn;
+        await LoadConditionsDropDown();
         return View(new InventoryFormViewModel
         {
             InventoryId = id,
             Isbn = isbn,
+            BookTitle = bookTitle,
             Ranks = ranks,
             Purchased = purchased
         });
@@ -74,7 +77,8 @@ public class InventoryController : Controller
     {
         if (!ModelState.IsValid)
         {
-            await LoadDropDowns();
+            model.BookTitle = await ResolveBookTitle(model.Isbn);
+            await LoadConditionsDropDown();
             return View(model);
         }
 
@@ -82,7 +86,8 @@ public class InventoryController : Controller
         if (!result.IsSuccess)
         {
             ModelState.AddModelError(string.Empty, result.Message);
-            await LoadDropDowns();
+            model.BookTitle = await ResolveBookTitle(model.Isbn);
+            await LoadConditionsDropDown();
             return View(model);
         }
 
@@ -103,8 +108,19 @@ public class InventoryController : Controller
     private async Task LoadDropDowns()
     {
         var books = await _bookService.GetAllAsync();
-        var conditions = await _referenceDataService.GetBookConditionsAsync();
         ViewBag.Books = new SelectList(books.Data ?? new(), "Isbn", "Title");
+        await LoadConditionsDropDown();
+    }
+
+    private async Task LoadConditionsDropDown()
+    {
+        var conditions = await _referenceDataService.GetBookConditionsAsync();
         ViewBag.Conditions = new SelectList(conditions.Data ?? new(), "Ranks", "FullDescription");
+    }
+
+    private async Task<string> ResolveBookTitle(string isbn)
+    {
+        var books = await _bookService.GetAllAsync();
+        return books.Data?.FirstOrDefault(b => b.Isbn == isbn)?.Title ?? isbn;
     }
 }

@@ -13,7 +13,13 @@ public class JwtAuthorizationHandler : DelegatingHandler
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var token = _httpContextAccessor.HttpContext?.Session.GetString(SessionKeys.JwtToken);
+        var httpContext = _httpContextAccessor.HttpContext;
+        var token = httpContext?.Session.GetString(SessionKeys.JwtToken);
+
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            token = httpContext?.User?.FindFirst(SessionKeys.JwtToken)?.Value;
+        }
 
         if (!string.IsNullOrWhiteSpace(token))
         {

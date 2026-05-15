@@ -19,7 +19,7 @@ namespace BookStore.Services.Implementations
         public string GenerateToken(User user)
         {
             var jwt = _config.GetSection("JwtSettings");
-            var roleName = user.RoleNumberNavigation?.PermRole1 ?? "Guest";
+            var roleName = (user.RoleNumberNavigation?.PermRole1 ?? "Guest").Trim();
 
             var claims = new[]
             {

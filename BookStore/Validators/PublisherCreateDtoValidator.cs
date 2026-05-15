@@ -8,15 +8,16 @@ namespace BookStore.Validators
         public PublisherCreateDtoValidator()
         {
             RuleFor(x => x.Name)
-                .NotEmpty()
+                .NotEmpty().WithMessage("Name is required")
                 .MaximumLength(50);
 
             RuleFor(x => x.City)
+                .NotEmpty().WithMessage("City is required")
                 .MaximumLength(30);
 
             RuleFor(x => x.StateCode)
-                .Length(2)
-                .When(x => !string.IsNullOrWhiteSpace(x.StateCode));
+                .NotEmpty().WithMessage("State is required")
+                .Length(2).WithMessage("State code must be exactly 2 characters");
         }
     }
 }

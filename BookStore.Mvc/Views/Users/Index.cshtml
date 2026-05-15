@@ -1,6 +1,8 @@
 @model List<UserViewModel>
 @{
     ViewData["Title"] = "Users";
+    var isAdmin = User.IsInRole("Admin");
+    
 }
 
 <div class="page-title">
@@ -8,7 +10,30 @@
 </div>
 
 <div class="content-panel p-3">
-    <input class="form-control mb-3" placeholder="Filter users" data-table-filter="#usersTable" />
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <input class="form-control"
+               placeholder="Filter users"
+               data-table-filter="#usersTable"
+               style="flex: 1 1 auto;" />
+        @if (isAdmin)
+        {
+            <a class="btn btn-primary ms-auto author-toolbar-button" asp-action="Create">Add User</a>
+        }
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center gap-2 mb-3" data-table-pager="#usersTable">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-page-prev>Prev 10</button>
+        <label class="small text-muted mb-0" for="usersPageSize">Rows</label>
+        <input id="usersPageSize"
+               type="number"
+               min="1"
+               value="10"
+               class="form-control form-control-sm"
+               style="width: 90px;"
+               data-page-size />
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-page-next>Next 10</button>
+    </div>
+
     <table class="table table-hover align-middle" id="usersTable">
         <thead><tr><th>ID</th><th>Name</th><th>Username</th><th>Phone</th><th>Role</th><th></th></tr></thead>
         <tbody>

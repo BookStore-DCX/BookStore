@@ -112,7 +112,8 @@ public class AccountController : Controller
         {
             new(ClaimTypes.NameIdentifier, auth.UserId.ToString()),
             new(ClaimTypes.Name, auth.UserName),
-            new(ClaimTypes.Role, role)
+            new(ClaimTypes.Role, role),
+            new(SessionKeys.JwtToken, auth.Token)
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

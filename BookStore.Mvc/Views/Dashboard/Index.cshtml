@@ -8,33 +8,59 @@
 </div>
 
 <div class="row g-3 mb-4">
-    <div class="col-md-3"><div class="metric"><div class="text-muted">Books</div><div class="metric-value">@Model.BooksCount</div></div></div>
-    <div class="col-md-3"><div class="metric"><div class="text-muted">Authors</div><div class="metric-value">@Model.AuthorsCount</div></div></div>
-    <div class="col-md-3"><div class="metric"><div class="text-muted">Publishers</div><div class="metric-value">@Model.PublishersCount</div></div></div>
+    <div class="col-md-6">
+        <div class="metric d-flex justify-content-between align-items-center">
+            <div>
+                <div class="text-muted">Books</div>
+                <div class="metric-value">@Model.BooksCount</div>
+            </div>
+            <a class="btn btn-outline-secondary btn-sm" asp-controller="Books" asp-action="Index">View all Books</a>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="metric d-flex justify-content-between align-items-center">
+            <div>
+                <div class="text-muted">Authors</div>
+                <div class="metric-value">@Model.AuthorsCount</div>
+            </div>
+            <a class="btn btn-outline-secondary btn-sm" asp-controller="Authors" asp-action="Index">View all Authors</a>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="metric d-flex justify-content-between align-items-center">
+            <div>
+                <div class="text-muted">Publishers</div>
+                <div class="metric-value">@Model.PublishersCount</div>
+            </div>
+            <a class="btn btn-outline-secondary btn-sm" asp-controller="Publishers" asp-action="Index">View all Publishers</a>
+        </div>
+    </div>
+
     @if (User.IsInRole("Admin") || User.IsInRole("StoreOwner"))
     {
-        <div class="col-md-3"><div class="metric"><div class="text-muted">Inventory</div><div class="metric-value">@Model.InventoryCount</div></div></div>
+        <div class="col-md-6">
+            <div class="metric d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="text-muted">Inventory</div>
+                    <div class="metric-value">@Model.InventoryCount</div>
+                </div>
+                <a class="btn btn-outline-secondary btn-sm" asp-controller="Inventory" asp-action="Index">View all Inventory</a>
+            </div>
+        </div>
     }
+
     @if (User.IsInRole("Admin"))
     {
-        <div class="col-md-3"><div class="metric"><div class="text-muted">Users</div><div class="metric-value">@Model.UsersCount</div></div></div>
+        <div class="col-md-6">
+            <div class="metric d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="text-muted">Users</div>
+                    <div class="metric-value">@Model.UsersCount</div>
+                </div>
+                <a class="btn btn-outline-secondary btn-sm" asp-controller="Users" asp-action="Index">View all Users</a>
+            </div>
+        </div>
     }
-</div>
-
-<div class="content-panel p-3">
-    <h2 class="h5">Recent Books</h2>
-    <table class="table align-middle">
-        <thead><tr><th>ISBN</th><th>Title</th><th>Publisher</th><th></th></tr></thead>
-        <tbody>
-        @foreach (var book in Model.RecentBooks)
-        {
-            <tr>
-                <td>@book.Isbn</td>
-                <td>@book.Title</td>
-                <td>@book.PublisherName</td>
-                <td class="text-end"><a class="btn btn-sm btn-outline-primary" asp-controller="Books" asp-action="Details" asp-route-id="@book.Isbn">Open</a></td>
-            </tr>
-        }
-        </tbody>
-    </table>
 </div>

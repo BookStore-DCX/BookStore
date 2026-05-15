@@ -10,7 +10,7 @@
         }
         else
         {
-            <input asp-for="Isbn" class="form-control" />
+            <input asp-for="Isbn" class="form-control" maxlength="13" placeholder="X-XXX-XXXXX-X" />
         }
         <span asp-validation-for="Isbn" class="text-danger"></span>
     </div>
@@ -40,8 +40,15 @@
     </div>
     <div class="mb-3 mt-3">
         <label asp-for="Edition" class="form-label"></label>
-        <input asp-for="Edition" class="form-control" />
+        <input asp-for="Edition" class="form-control" type="number" min="1" step="1" />
     </div>
     <button class="btn btn-primary" type="submit">Save</button>
-    <a class="btn btn-link" asp-action="Index">Cancel</a>
+    @if (ViewContext.RouteData.Values["action"]?.ToString() == "Edit")
+    {
+        <a class="btn btn-link" asp-action="Details" asp-route-id="@Model.Isbn">Cancel</a>
+    }
+    else
+    {
+        <a class="btn btn-link" asp-action="Index">Cancel</a>
+    }
 </form>

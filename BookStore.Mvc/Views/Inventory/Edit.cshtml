@@ -5,5 +5,31 @@
 
 <div class="content-panel p-4 form-shell">
     <h1 class="h3 mb-3">Edit Inventory Copy</h1>
-    <partial name="_InventoryForm" model="Model" />
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        <input asp-for="InventoryId" type="hidden" />
+        <input asp-for="Isbn" type="hidden" />
+
+        <div class="mb-3">
+            <label class="form-label">Book</label>
+            <input class="form-control" value="@Model.BookTitle" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Ranks" class="form-label"></label>
+            <select asp-for="Ranks" asp-items="ViewBag.Conditions" class="form-select">
+                <option value="">Choose condition</option>
+            </select>
+            <span asp-validation-for="Ranks" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Purchased" class="form-label"></label>
+            <input asp-for="Purchased" class="form-control" type="number" min="0" />
+            <span asp-validation-for="Purchased" class="text-danger"></span>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a class="btn btn-link" asp-action="Index">Cancel</a>
+    </form>
 </div>

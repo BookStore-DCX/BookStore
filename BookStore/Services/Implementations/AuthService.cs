@@ -38,7 +38,7 @@ namespace BookStore.Services.Implementations
                 UserId = user.UserId,
                 Token = _jwt.GenerateToken(user),
                 UserName = user.UserName,
-                Role = user.RoleNumberNavigation?.PermRole1 ?? "Guest",
+                Role = (user.RoleNumberNavigation?.PermRole1 ?? "Guest").Trim(),
                 Expiry = DateTime.UtcNow.AddMinutes(60),
             };
         }

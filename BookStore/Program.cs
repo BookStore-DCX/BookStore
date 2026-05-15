@@ -1,6 +1,7 @@
 using AutoMapper;
 using BookStore.Data;
 using BookStore.DTOs.Auth;
+using BookStore.DTOs.Publisher;
 using BookStore.DTOs.User;
 using BookStore.Mappings;
 using BookStore.Middleware;
@@ -73,6 +74,7 @@ namespace BookStore
             builder.Services.AddTransient<IValidator<RegisterDto>, RegisterDtoValidator>();
             builder.Services.AddTransient<IValidator<LoginDto>, LoginDtoValidator>();
             builder.Services.AddTransient<IValidator<UserUpdateDto>, UserUpdateDtoValidator>();
+            builder.Services.AddTransient<IValidator<PublisherCreateDto>, PublisherCreateDtoValidator>();
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

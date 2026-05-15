@@ -1,18 +1,38 @@
 @model List<PublisherViewModel>
 @{
     ViewData["Title"] = "Publishers";
+    var canManage = User.IsInRole("Admin") || User.IsInRole("StoreOwner");
 }
 
 <div class="page-title">
     <h1 class="h3 mb-0">Publishers</h1>
-    @if (User.IsInRole("Admin") || User.IsInRole("StoreOwner"))
-    {
-        <a class="btn btn-primary" asp-action="Create">Add Publisher</a>
-    }
 </div>
 
 <div class="content-panel p-3">
-    <input class="form-control mb-3" placeholder="Filter publishers" data-table-filter="#publishersTable" />
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <input class="form-control"
+               placeholder="Filter publishers"
+               data-table-filter="#publishersTable"
+               style="flex: 1 1 auto;" />
+        @if (canManage)
+        {
+            <a class="btn btn-primary ms-auto author-toolbar-button" asp-action="Create">Add Publisher</a>
+        }
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center gap-2 mb-3" data-table-pager="#publishersTable">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-page-prev>Prev 10</button>
+        <label class="small text-muted mb-0" for="publishersPageSize">Rows</label>
+        <input id="publishersPageSize"
+               type="number"
+               min="1"
+               value="10"
+               class="form-control form-control-sm"
+               style="width: 90px;"
+               data-page-size />
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-page-next>Next 10</button>
+    </div>
+
     <table class="table table-hover align-middle" id="publishersTable">
         <thead><tr><th>ID</th><th>Name</th><th>City</th><th>State</th><th></th></tr></thead>
         <tbody>
@@ -24,7 +44,7 @@
                 <td>@publisher.City</td>
                 <td>@publisher.StateName (@publisher.StateCode)</td>
                 <td class="text-end table-actions">
-                    @if (User.IsInRole("Admin") || User.IsInRole("StoreOwner"))
+                    @if (canManage)
                     {
                         <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@publisher.PublisherId">Edit</a>
                         <form class="d-inline" asp-action="Delete" asp-route-id="@publisher.PublisherId" method="post" data-confirm="Delete this publisher?">

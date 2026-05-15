@@ -4,6 +4,7 @@ using BookStore.DTOs.Book;
 using BookStore.Exceptions;
 using BookStore.Models;
 using BookStore.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +36,29 @@ public class BookController : ControllerBase
     {
         var book = _mapper.Map<Book>(dto);
         await _uow.Books.AddAsync(book);
-        await _uow.SaveChangesAsync();
+        try
+        {
+            await _uow.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            var msg = ex.InnerException?.Message ?? ex.Message;
+            if (msg.Contains("PRIMARY KEY", StringComparison.OrdinalIgnoreCase)
+                || msg.Contains("UNIQUE", StringComparison.OrdinalIgnoreCase)
+                || msg.Contains("duplicate", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ConflictException($"A book with ISBN '{dto.Isbn}' already exists.");
+            }
+
+            if (msg.Contains("truncated", StringComparison.OrdinalIgnoreCase)
+                || msg.Contains("too long", StringComparison.OrdinalIgnoreCase)
+                || msg.Contains("max", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new BadRequestException("Book data is invalid for database limits. Verify ISBN format X-XXX-XXXXX-X and text lengths.");
+            }
+
+            throw;
+        }
         return CreatedAtAction(nameof(GetByIsbn), new { isbn = book.Isbn },
             ApiResponse<BookDto>.Created(_mapper.Map<BookDto>(book)));
     }

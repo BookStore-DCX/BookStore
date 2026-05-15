@@ -1,13 +1,12 @@
-@model UserUpdateViewModel
+﻿@model RegisterViewModel
 @{
-    ViewData["Title"] = "Edit User";
+    ViewData["Title"] = "Create User";
 }
 
 <div class="content-panel p-4 form-shell">
-    <h1 class="h3 mb-3">Edit User</h1>
+    <h1 class="h3 mb-3">Create User</h1>
     <form method="post">
         <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-        <input asp-for="UserName" type="hidden" />
         <div class="mb-3">
             <label asp-for="FirstName" class="form-label"></label>
             <input asp-for="FirstName" class="form-control" />
@@ -19,19 +18,21 @@
             <span asp-validation-for="LastName" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="PhoneNumber" class="form-label"></label>
-            <input asp-for="PhoneNumber" class="form-control" />
+            <label asp-for="UserName" class="form-label"></label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="RoleNumber" class="form-label"></label>
-            <select asp-for="RoleNumber" class="form-select">
-                <option value="1">Guest</option>
-                <option value="2">RegisteredUser</option>
-                <option value="3">StoreOwner</option>
-                <option value="4">Admin</option>
-            </select>
+            <label asp-for="PhoneNumber" class="form-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
         </div>
-        <button class="btn btn-primary" type="submit">Save</button>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <button class="btn btn-primary" type="submit">Create</button>
         <a class="btn btn-link" asp-action="Index">Cancel</a>
     </form>
 </div>

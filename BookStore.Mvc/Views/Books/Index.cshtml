@@ -32,6 +32,14 @@
 <div class="row g-4">
     @foreach (var book in Model)
     {
+        var rawDescription = string.IsNullOrWhiteSpace(book.Description)
+            ? "A bookstore selection ready to explore."
+            : book.Description;
+
+        var displayDescription = rawDescription.Length > 30
+            ? rawDescription[..30] + "..."
+            : rawDescription;
+
         <div class="col-md-6 col-xl-4">
             <article class="book-card">
                 <div class="book-cover" aria-hidden="true">
@@ -40,12 +48,14 @@
                 <div class="book-card-body">
                     <p class="book-meta">@book.CategoryName</p>
                     <h3>@book.Title</h3>
-                    <p class="book-isbn">@book.Isbn</p>
-                    <p class="book-description">@(string.IsNullOrWhiteSpace(book.Description) ? "A bookstore selection ready to explore." : book.Description)</p>
+
+                    <p class="book-description" title="@rawDescription">@displayDescription</p>
+
                     <div class="book-card-footer">
                         <span class="stock-pill">@book.InventoryCount copies</span>
                         <a class="btn btn-sm btn-brand" asp-action="Details" asp-route-id="@book.Isbn">View Book</a>
                     </div>
+
                     @if (User.IsInRole("Admin") || User.IsInRole("StoreOwner"))
                     {
                         <div class="mt-3 pt-3 border-top">

@@ -4,10 +4,9 @@
 }
 
 <div class="content-panel p-4 mb-4">
-    <div class="d-flex justify-content-between flex-wrap gap-3">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
         <div>
             <h1 class="h3">@Model.Title</h1>
-            <p class="text-muted mb-1">@Model.Isbn</p>
             <p>@Model.Description</p>
             <p class="mb-1"><strong>Category:</strong> @Model.Category</p>
             <p class="mb-1"><strong>Publisher:</strong> @Model.Publisher</p>
@@ -15,10 +14,16 @@
         </div>
         @if (User.Identity?.IsAuthenticated == true)
         {
-            <form asp-controller="Cart" asp-action="Add" method="post">
-                <input type="hidden" name="isbn" value="@Model.Isbn" />
-                <button class="btn btn-warning" type="submit">Add to Cart</button>
-            </form>
+            <div class="d-flex align-items-center gap-2">
+                @if (User.IsInRole("Admin") || User.IsInRole("StoreOwner"))
+                {
+                    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@Model.Isbn">Edit Book</a>
+                }
+                <form asp-controller="Cart" asp-action="Add" method="post">
+                    <input type="hidden" name="isbn" value="@Model.Isbn" />
+                    <button class="btn btn-warning" type="submit">Add to Cart</button>
+                </form>
+            </div>
         }
     </div>
 </div>
@@ -34,7 +39,7 @@
                 {
                     <tr>
                         <td>@copy.InventoryId</td>
-                        <td>@copy.ConditionDescription</td>
+                        <td>@(string.IsNullOrWhiteSpace(copy.Condition) ? "N/A" : copy.Condition)</td>
                         <td>@copy.Price?.ToString("C")</td>
                         <td>
                             @if (User.Identity?.IsAuthenticated == true)
@@ -57,7 +62,7 @@
             @foreach (var review in Model.Reviews)
             {
                 <div class="border-bottom py-2">
-                    <div class="fw-semibold">Rating: @review.Rating</div>
+                    <div class="fw-semibold"><strong>Rating:</strong> @review.Rating</div>
                     <div>@review.Comments</div>
                     @if (User.IsInRole("Admin") || User.IsInRole("StoreOwner") || User.IsInRole("RegisteredUser"))
                     {
