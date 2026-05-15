@@ -1,28 +1,57 @@
 @model List<AuthorViewModel>
 @{
     ViewData["Title"] = "Authors";
+    var canManage = User.IsInRole("Admin") || User.IsInRole("StoreOwner");
 }
 
 <div class="page-title">
     <h1 class="h3 mb-0">Authors</h1>
-    @if (User.IsInRole("Admin") || User.IsInRole("StoreOwner"))
-    {
-        <a class="btn btn-primary" asp-action="Create">Add Author</a>
-    }
 </div>
 
 <div class="content-panel p-3">
-    <input class="form-control mb-3" placeholder="Filter authors" data-table-filter="#authorsTable" />
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <input class="form-control"
+               placeholder="Filter authors"
+               data-table-filter="#authorsTable"
+               style="flex: 1 1 auto;" />
+        @if (canManage)
+        {
+            <a class="btn btn-primary ms-auto author-toolbar-button" asp-action="Create">Add Author</a>
+        }
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center gap-2 mb-3" data-table-pager="#authorsTable">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-page-prev>Prev 10</button>
+        <label class="small text-muted mb-0" for="authorsPageSize">Rows</label>
+        <input id="authorsPageSize"
+               type="number"
+               min="1"
+               value="10"
+               class="form-control form-control-sm"
+               style="width: 90px;"
+               data-page-size />
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-page-next>Next 10</button>
+    </div>
+
     <table class="table table-hover align-middle" id="authorsTable">
-        <thead><tr><th>ID</th><th>Name</th><th class="table-actions"></th></tr></thead>
+        <thead><tr>
+            <th>Full Name</th>
+            <th class="table-actions"></th>
+        </tr></thead>
         <tbody>
         @foreach (var author in Model)
         {
+            var authorName = $"{author.FirstName} {author.LastName}";
             <tr>
-                <td>@author.AuthorId</td>
                 <td>@author.FirstName @author.LastName</td>
                 <td class="text-end">
-                    @if (User.IsInRole("Admin") || User.IsInRole("StoreOwner"))
+                    <a class="btn btn-sm btn-outline-primary"
+                       asp-controller="Books"
+                       asp-action="Index"
+                       asp-route-title=""
+                       asp-route-authorName="@authorName"
+                       asp-route-description="">View Books</a>
+                    @if (canManage)
                     {
                         <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@author.AuthorId">Edit</a>
                         <form class="d-inline" asp-action="Delete" asp-route-id="@author.AuthorId" method="post" data-confirm="Delete this author?">

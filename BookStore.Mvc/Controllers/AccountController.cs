@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Mvc.Controllers;
 
+[Authorize]
 public class AccountController : Controller
 {
     private readonly IAuthService _authService;
@@ -48,8 +49,8 @@ public class AccountController : Controller
         {
             return Redirect(model.ReturnUrl);
         }
-
-        return RedirectToAction("Index", "Dashboard");
+        this.Success("Logged in successfully.");
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]
@@ -86,10 +87,12 @@ public class AccountController : Controller
     {
         HttpContext.Session.Clear();
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        this.Success("Logged out successfully.");
         return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult AccessDenied()
     {
         return View();
@@ -103,11 +106,13 @@ public class AccountController : Controller
         HttpContext.Session.SetString(SessionKeys.Role, auth.Role);
         HttpContext.Session.SetString(SessionKeys.TokenExpiry, auth.Expiry.ToString("O"));
 
+        var role = auth.Role?.Trim() ?? string.Empty;
+
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, auth.UserId.ToString()),
             new(ClaimTypes.Name, auth.UserName),
-            new(ClaimTypes.Role, auth.Role)
+            new(ClaimTypes.Role, role)
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

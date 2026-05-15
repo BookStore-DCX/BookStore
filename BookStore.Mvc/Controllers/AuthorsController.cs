@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Mvc.Controllers;
 
-[Authorize(Roles = "Admin,StoreOwner")]
+[Authorize(Roles = "Admin,StoreOwner,StoreManager")]
 public class AuthorsController : Controller
 {
     private readonly IAuthorService _authorService;

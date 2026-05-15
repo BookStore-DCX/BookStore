@@ -20,6 +20,16 @@ body {
     linear-gradient(180deg, #fffaf1 0%, #f4efe8 100%);
   color: var(--ink);
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body > .container.py-4 {
+  flex: 1 0 auto;
+}
+
+footer.footer {
+  margin-top: auto;
 }
 
 .site-header {
@@ -353,6 +363,45 @@ body {
 
 .validation-summary-errors ul {
   margin-bottom: 0;
+}
+
+.auth-page .validation-summary-errors ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.auth-page .validation-summary-errors li::marker {
+  content: "";
+}
+
+.login-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(33, 25, 21, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.login-popup-overlay.is-visible {
+  display: flex;
+}
+
+.login-popup {
+  background: #fffaf1;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 18px 40px rgba(33, 25, 21, 0.2);
+  max-width: 360px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.author-toolbar-button {
+  height: calc(1.5em + 0.75rem + 2px);
+  padding-inline: 1.25rem;
 }
 
 @media (max-width: 991px) {

@@ -5,14 +5,14 @@
 
 <section class="home-hero mb-5">
     <div class="home-hero-copy">
-        <p class="section-kicker">Online bookstore</p>
-        <h1>Books worth finding, shelves worth exploring.</h1>
-        <p>Browse real catalog data from your Web API, review books, and manage inventory through one organized MVC storefront.</p>
+        <p class="section-kicker">Online Bookstore</p>
+        <h1>Welcome to online book portal.</h1>
+        <p>Start exploring books.</p>
         <div class="d-flex gap-2 flex-wrap">
-            <a class="btn btn-brand btn-lg" asp-controller="Books" asp-action="Index">Shop the Catalog</a>
+            <a class="btn btn-brand btn-lg" asp-controller="Books" asp-action="Index">View All Books</a>
             @if (User.Identity?.IsAuthenticated != true)
             {
-                <a class="btn btn-outline-dark btn-lg" asp-controller="Account" asp-action="Register">Join BookNest</a>
+                <a class="btn btn-outline-dark btn-lg" asp-controller="Account" asp-action="Register">Register as User</a>
             }
         </div>
     </div>
@@ -26,7 +26,7 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
         <p class="section-kicker mb-1">Fresh picks</p>
-        <h2 class="h4 mb-0">Latest Books</h2>
+        <h2 class="h4 mb-0">Books</h2>
     </div>
     <a class="btn btn-outline-dark btn-sm" asp-controller="Books" asp-action="Index">View all</a>
 </div>
@@ -38,8 +38,11 @@
             <article class="mini-book-card">
                 <div class="mini-cover">@book.Title.Substring(0, 1)</div>
                 <h3>@book.Title</h3>
-                <p>@book.Isbn</p>
-                <a asp-controller="Books" asp-action="Details" asp-route-id="@book.Isbn">Open details</a>
+                <a asp-controller="Books"
+                   asp-action="Details"
+                   asp-route-id="@book.Isbn"
+                   data-requires-login="true">Open details
+               </a>
             </article>
         </div>
     }

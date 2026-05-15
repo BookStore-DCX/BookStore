@@ -24,14 +24,7 @@
                         <li class="nav-item"><a class="nav-link" asp-controller="Books" asp-action="Index">Shop Books</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Authors" asp-action="Index">Authors</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Publishers" asp-action="Index">Publishers</a></li>
-                        <li class="nav-item dropdown">
-                            <button class="nav-link dropdown-toggle btn btn-link" data-bs-toggle="dropdown" type="button">Browse</button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Reference" asp-action="Categories">Categories</a></li>
-                                <li><a class="dropdown-item" asp-controller="Reference" asp-action="Conditions">Book Conditions</a></li>
-                                <li><a class="dropdown-item" asp-controller="Reference" asp-action="States">States</a></li>
-                            </ul>
-                        </li>
+                        
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item"><a class="nav-link" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
@@ -102,5 +95,12 @@
     </script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <div class="login-popup-overlay" id="loginPopup" aria-hidden="true">
+        <div class="login-popup">
+            <h4>Login required</h4>
+            <p>Please login first to view book details.</p>
+            <button type="button" class="btn btn-brand btn-sm" id="loginPopupClose">OK</button>
+        </div>
+    </div>
 </body>
 </html>
