@@ -7,15 +7,15 @@ using BookStore.Repositories.Interfaces;
 using BookStore.Services.Implementations;
 using BookStore.Exceptions;
 
-namespace Book.Tests.Services
+namespace BookStore.Test.Services
 {
-    public class InventoryServiceTests
+    public class InventoryServiceTest
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly Mock<IMapper> _mockMapper;
         private readonly InventoryService _service;
 
-        public InventoryServiceTests()
+        public InventoryServiceTest()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockMapper = new Mock<IMapper>();
