@@ -2,7 +2,7 @@
   --ink: #211915;
   --muted: #6b625b;
   --paper: #fffaf1;
-  --cream: #f5efe3;
+  --cream: #4c4b48;
   --line: #e5d8c8;
   --brand: #9b3f24;
   --brand-dark: #6f2e1d;
@@ -15,9 +15,7 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(circle at top left, rgba(217, 155, 74, 0.12), transparent 30rem),
-    linear-gradient(180deg, #fffaf1 0%, #f4efe8 100%);
+  background: #fff;
   color: var(--ink);
   min-height: 100vh;
   display: flex;
@@ -33,9 +31,9 @@ footer.footer {
 }
 
 .site-header {
-  background: rgba(255, 250, 241, 0.94);
-  border-bottom: 1px solid var(--line);
-  box-shadow: 0 8px 24px rgba(33, 25, 21, 0.06);
+  background: rgba(250, 248, 243, 0.98);
+  border-bottom: 1px solid #ddd3c4;
+  box-shadow: 0 4px 14px rgba(33, 25, 21, 0.05);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -43,21 +41,14 @@ footer.footer {
 }
 
 .navbar .nav-link {
-  color: #4a4038;
+  color: #3f3731;
   font-weight: 500;
 }
 
 .navbar .nav-link:hover {
-  color: var(--brand);
+  color: #7a3320;
 }
 
-.brand-mark {
-  color: var(--ink);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-weight: 800;
-}
 
 .brand-icon {
   align-items: center;
@@ -68,6 +59,14 @@ footer.footer {
   height: 2rem;
   justify-content: center;
   width: 2rem;
+}
+
+.brand-mark {
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 800;
 }
 
 .btn-brand {
@@ -89,9 +88,9 @@ footer.footer {
 }
 
 .footer {
-  background: #fffaf1;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
+  background: #f3eee5;
+  border-top: 1px solid #ddd3c4;
+  color: #5e554d;
 }
 
 .section-kicker {
@@ -116,9 +115,9 @@ footer.footer {
 
 .catalog-hero,
 .home-hero {
-  background: linear-gradient(135deg, #542817 0%, #9b3f24 52%, #d99b4a 100%);
+  background: #fff;
   border-radius: 8px;
-  color: #fff;
+  color: var(--ink);
   display: flex;
   justify-content: space-between;
   gap: 2rem;
@@ -127,9 +126,18 @@ footer.footer {
   position: relative;
 }
 
+.catalog-hero {
+  align-items: flex-start;
+}
+
+.catalog-hero .btn {
+  align-self: flex-start;
+  z-index: 1;
+}
+
 .catalog-hero::after,
 .home-hero::after {
-  background: repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0 8px, transparent 8px 20px);
+  background: none;
   content: "";
   inset: auto 0 0;
   height: 4rem;
@@ -145,18 +153,31 @@ footer.footer {
 
 .catalog-hero p,
 .home-hero p {
-  color: rgba(255, 255, 255, 0.86);
+  color: var(--muted);
   max-width: 640px;
 }
 
 .home-hero {
   align-items: center;
+  justify-content: center;
   min-height: 380px;
+  text-align: center;
 }
 
 .home-hero-copy {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-inline: auto;
+  max-width: 760px;
   position: relative;
   z-index: 1;
+}
+
+.home-hero .hero-stack,
+.home-hero .hero-book {
+  display: none !important;
 }
 
 .hero-stack {
