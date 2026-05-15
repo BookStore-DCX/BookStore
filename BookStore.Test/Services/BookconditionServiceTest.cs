@@ -5,10 +5,9 @@ using BookStore.Models;
 using BookStore.Repositories.Interfaces;
 using BookStore.Services.Implementations;
 using Moq;
-using System.Timers;
-using Xunit;
 
-namespace BookStore.Tests.Services
+
+namespace BookStore.Test.Services
 {
     public class BookconditionServiceTests
     {
