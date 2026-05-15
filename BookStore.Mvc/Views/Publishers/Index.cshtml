@@ -34,26 +34,25 @@
     </div>
 
     <table class="table table-hover align-middle" id="publishersTable">
-        <thead><tr><th>ID</th><th>Name</th><th>City</th><th>State</th><th></th></tr></thead>
+        <thead><tr><th>Name</th><th>City</th><th>State</th><th></th></tr></thead>
         <tbody>
-        @foreach (var publisher in Model)
-        {
-            <tr>
-                <td>@publisher.PublisherId</td>
-                <td>@publisher.Name</td>
-                <td>@publisher.City</td>
-                <td>@publisher.StateName (@publisher.StateCode)</td>
-                <td class="text-end table-actions">
-                    @if (canManage)
-                    {
-                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@publisher.PublisherId">Edit</a>
-                        <form class="d-inline" asp-action="Delete" asp-route-id="@publisher.PublisherId" method="post" data-confirm="Delete this publisher?">
-                            <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
-                        </form>
-                    }
-                </td>
-            </tr>
-        }
+            @foreach (var publisher in Model)
+            {
+                <tr>
+                    <td>@publisher.Name</td>
+                    <td>@publisher.City</td>
+                    <td>@publisher.StateName (@publisher.StateCode)</td>
+                    <td class="text-end table-actions">
+                        @if (canManage)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@publisher.PublisherId">Edit</a>
+                            <form class="d-inline" asp-action="Delete" asp-route-id="@publisher.PublisherId" method="post" data-confirm="Delete this publisher?">
+                                <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

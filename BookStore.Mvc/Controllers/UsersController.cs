@@ -22,7 +22,31 @@ public class UsersController : Controller
         if (!result.IsSuccess) this.Error(result.Message);
         return View(result.Data ?? new());
     }
+    public IActionResult Create()
+    {
+        return View(new RegisterViewModel());
+    }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(RegisterViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var result = await _userService.RegisterAsync(model);
+
+        if (!result.IsSuccess)
+        {
+            ModelState.AddModelError(string.Empty, result.Message);
+            return View(model);
+        }
+
+        this.Success("User created successfully.");
+        return RedirectToAction(nameof(Index));
+    }
     public async Task<IActionResult> Edit(string id)
     {
         var result = await _userService.GetByUsernameAsync(id);

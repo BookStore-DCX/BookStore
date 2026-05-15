@@ -24,22 +24,32 @@ public class BooksController : Controller
     }
 
     [AllowAnonymous]
-    public async Task<IActionResult> Index(string? title, string? authorName, string? description)
+    public async Task<IActionResult> Index(string? title, string? authorName, string? description, int? categoryId)
     {
         var result = string.IsNullOrWhiteSpace(title) && string.IsNullOrWhiteSpace(authorName) && string.IsNullOrWhiteSpace(description)
             ? await _bookService.GetAllAsync()
             : await _bookService.SearchAsync(title, authorName, description);
 
+        var categories = await _referenceDataService.GetCategoriesAsync();
+
+        var books = result.Data ?? new List<BookListItemViewModel>();
+        if (categoryId.HasValue)
+        {
+            books = books.Where(b => b.Category == categoryId).ToList();
+        }
+
         ViewBag.TitleFilter = title;
         ViewBag.AuthorFilter = authorName;
         ViewBag.DescriptionFilter = description;
+        ViewBag.CategoryFilter = categoryId;
+        ViewBag.Categories = new SelectList(categories.Data ?? new(), "CatId", "CatDescription", categoryId);
 
         if (!result.IsSuccess)
         {
             this.Error(result.Message);
         }
 
-        return View(result.Data ?? new());
+        return View(books);
     }
 
     [AllowAnonymous]
@@ -164,29 +174,6 @@ public class BooksController : Controller
             return match.Value;
         }
 
-        return edition.Trim().ToLowerInvariant() switch
-        {
-            "first" => "1",
-            "second" => "2",
-            "third" => "3",
-            "fourth" => "4",
-            "fifth" => "5",
-            "sixth" => "6",
-            "seventh" => "7",
-            "eighth" => "8",
-            "ninth" => "9",
-            "tenth" => "10",
-            "i" => "1",
-            "ii" => "2",
-            "iii" => "3",
-            "iv" => "4",
-            "v" => "5",
-            "vi" => "6",
-            "vii" => "7",
-            "viii" => "8",
-            "ix" => "9",
-            "x" => "10",
-            _ => null
-        };
+        return edition.Trim();
     }
 }

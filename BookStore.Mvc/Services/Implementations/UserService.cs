@@ -18,6 +18,9 @@ public class UserService : IUserService
     public Task<ApiResult<UserViewModel>> GetByUsernameAsync(string username) => _apiClient.GetAsync<UserViewModel>($"User/{Uri.EscapeDataString(username)}");
 
     public Task<ApiResult<UserViewModel>> UpdateAsync(string username, UserUpdateViewModel model) => _apiClient.PutAsync<UserUpdateViewModel, UserViewModel>($"User/{Uri.EscapeDataString(username)}", model);
-
+    public Task<ApiResult<UserViewModel>> RegisterAsync(RegisterViewModel model)
+    {
+        return _apiClient.PostAsync<RegisterViewModel, UserViewModel>("Auth/register", model);
+    }
     public Task<ApiResult<bool>> DeleteAsync(string username) => _apiClient.DeleteAsync($"User/{Uri.EscapeDataString(username)}");
 }

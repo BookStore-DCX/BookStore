@@ -2,18 +2,29 @@
 {
     public interface IUnitOfWork : IDisposable
     {
-        IUserRepository Users { get; }
-        IPublisherRepository Publishers { get; }
-        ICategoryRepository Categories { get; }
-        IStateRepository States { get; }
-        IShoppingCartRepository ShoppingCarts { get; }
-        IPurchaseLogRepository PurchaseLogs { get; }
-        IReviewRepository Reviews { get; }
-        IBookConditionRepository BookConditions { get; }
-        IInventoryRepository Inventories { get; }
-        IBookRepository Books { get; }
         IAuthorRepository Authors { get; }
 
+        IBookRepository Books { get; }
+
+        IBookConditionRepository BookConditions { get; }
+
+        ICategoryRepository Categories { get; }
+
+        IInventoryRepository Inventories { get; }
+
+        IPurchaseLogRepository PurchaseLogs { get; }
+
+        IPublisherRepository Publishers { get; }
+
+        IShoppingCartRepository ShoppingCarts { get; }
+
+        IStateRepository States { get; }
+
+        IUserRepository Users { get; }
+
+        IReviewRepository Reviews { get; }
+
         Task<int> SaveChangesAsync();
+
     }
 }

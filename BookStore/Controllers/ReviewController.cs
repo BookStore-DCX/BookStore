@@ -53,21 +53,34 @@ namespace BookStore.Controllers
             var user = await _uow.Users.GetByIdAsync(userId)
                 ?? throw new NotFoundException($"User with ID {userId} not found");
 
-            var fullName = $"{user.FirstName} {user.LastName}".Trim();
-
-            var reviewer = await _uow.Reviews.GetReviewerByNameAsync(fullName);
+            var reviewer = await _uow.Reviews.GetReviewerByIdAsync(userId);
             if (reviewer == null)
             {
-                var newReviewerId = await _uow.Reviews.GetNextReviewerIdAsync();
+                var reviewerName = $"{user.FirstName} {user.LastName}".Trim();
+                if (string.IsNullOrWhiteSpace(reviewerName))
+                {
+                    reviewerName = user.UserName;
+                }
+
+                if (reviewerName.Length > 20)
+                {
+                    reviewerName = reviewerName[..20];
+                }
+
                 reviewer = new Reviewer
                 {
-                    ReviewerId = newReviewerId,
-                    Name = fullName,
+                    ReviewerId = userId,
+                    Name = reviewerName,
                     EmployedBy = null
                 };
 
                 await _uow.Reviews.AddReviewerAsync(reviewer);
                 await _uow.SaveChangesAsync();
+            }
+
+            if (await _uow.Reviews.ReviewExistsAsync(dto.Isbn, reviewer.ReviewerId))
+            {
+                throw new ConflictException("You have already reviewed this book.");
             }
 
             var review = new Bookreview

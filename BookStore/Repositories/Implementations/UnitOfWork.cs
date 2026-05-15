@@ -35,17 +35,24 @@ namespace BookStore.Repositories.Implementations
             Books = books;
             Authors = authors;
         }
+        public IBookRepository Books { get; }
+
+        public IBookConditionRepository BookConditions { get; }
+
+        public ICategoryRepository Categories { get; }
+
+        public IInventoryRepository Inventories { get; }
+
+        public IPurchaseLogRepository PurchaseLogs { get; }
+
+        public IPublisherRepository Publishers { get; }
+
+        public IShoppingCartRepository ShoppingCarts { get; }
+
+        public IStateRepository States { get; }
 
         public IUserRepository Users { get; }
-        public IPublisherRepository Publishers { get; }
-        public ICategoryRepository Categories { get; }
-        public IStateRepository States { get; }
-        public IShoppingCartRepository ShoppingCarts { get; }
-        public IPurchaseLogRepository PurchaseLogs { get; }
         public IReviewRepository Reviews { get; }
-        public IBookConditionRepository BookConditions { get; }
-        public IInventoryRepository Inventories { get; }
-        public IBookRepository Books { get; }
         public IAuthorRepository Authors { get; }
 
         public async Task<int> SaveChangesAsync()

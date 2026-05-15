@@ -6,8 +6,7 @@
 <section class="home-hero mb-5">
     <div class="home-hero-copy">
         <p class="section-kicker">Online Bookstore</p>
-        <h1>Welcome to online book portal.</h1>
-        <p>Start exploring books.</p>
+        <h1>Welcome</h1>
         <div class="d-flex gap-2 flex-wrap">
             <a class="btn btn-brand btn-lg" asp-controller="Books" asp-action="Index">View All Books</a>
             @if (User.Identity?.IsAuthenticated != true)
@@ -15,11 +14,6 @@
                 <a class="btn btn-outline-dark btn-lg" asp-controller="Account" asp-action="Register">Register as User</a>
             }
         </div>
-    </div>
-    <div class="hero-stack" aria-hidden="true">
-        <div class="hero-book hero-book-one"></div>
-        <div class="hero-book hero-book-two"></div>
-        <div class="hero-book hero-book-three"></div>
     </div>
 </section>
 
@@ -31,18 +25,18 @@
     <a class="btn btn-outline-dark btn-sm" asp-controller="Books" asp-action="Index">View all</a>
 </div>
 
-<div class="row g-4">
+<div class="row g-4" id="homeBooksGrid">
     @foreach (var book in Model)
     {
-        <div class="col-md-6 col-xl-3">
+        <div class="col-md-6 col-xl-3" data-page-item>
             <article class="mini-book-card">
                 <div class="mini-cover">@book.Title.Substring(0, 1)</div>
                 <h3>@book.Title</h3>
                 <a asp-controller="Books"
                    asp-action="Details"
-                   asp-route-id="@book.Isbn"
-                   data-requires-login="true">Open details
-               </a>
+                   asp-route-id="@book.Isbn">
+                    Open details
+                </a>
             </article>
         </div>
     }

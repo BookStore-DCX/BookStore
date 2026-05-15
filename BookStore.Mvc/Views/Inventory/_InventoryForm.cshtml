@@ -17,14 +17,6 @@
         </select>
         <span asp-validation-for="Ranks" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="Purchased" class="form-label"></label>
-        <select asp-for="Purchased" class="form-select">
-            <option value="">Not purchased</option>
-            <option value="0">Available</option>
-            <option value="1">Purchased</option>
-        </select>
-    </div>
     <button class="btn btn-primary" type="submit">Save</button>
     <a class="btn btn-link" asp-action="Index">Cancel</a>
 </form>

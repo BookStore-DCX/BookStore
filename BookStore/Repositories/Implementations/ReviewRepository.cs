@@ -29,9 +29,17 @@ namespace BookStore.Repositories.Implementations
         public async Task<IEnumerable<Bookreview>> GetReviewsByReviewerAsync(int reviewerId)
             => await _dbSet.AsNoTracking().Where(r => r.ReviewerId == reviewerId).ToListAsync();
 
+        public async Task<Reviewer?> GetReviewerByIdAsync(int reviewerId)
+            => await _context.Reviewers.AsNoTracking()
+                .FirstOrDefaultAsync(r => r.ReviewerId == reviewerId);
+
         public async Task<Reviewer?> GetReviewerByNameAsync(string fullName)
             => await _context.Reviewers.AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Name == fullName);
+
+        public async Task<bool> ReviewExistsAsync(string isbn, int reviewerId)
+            => await _dbSet.AsNoTracking()
+                .AnyAsync(r => r.Isbn == isbn && r.ReviewerId == reviewerId);
 
         public async Task<int> GetNextReviewerIdAsync()
         {
