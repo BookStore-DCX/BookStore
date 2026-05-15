@@ -1,0 +1,32 @@
+@model List<ShoppingCartItemViewModel>
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<div class="page-title">
+    <h1 class="h3 mb-0">Shopping Cart</h1>
+    <form asp-action="Clear" method="post" data-confirm="Clear your cart?">
+        <button class="btn btn-outline-danger" type="submit">Clear Cart</button>
+    </form>
+</div>
+
+<div class="content-panel p-3">
+    <table class="table align-middle">
+        <thead><tr><th>ISBN</th><th>Title</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Isbn</td>
+                <td>@item.BookTitle</td>
+                <td class="text-end">
+                    <a class="btn btn-sm btn-outline-primary" asp-controller="Books" asp-action="Details" asp-route-id="@item.Isbn">View</a>
+                    <form class="d-inline" asp-action="Remove" method="post" data-confirm="Remove this item?">
+                        <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

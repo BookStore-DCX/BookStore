@@ -1,0 +1,34 @@
+@model List<InventoryViewModel>
+@{
+    ViewData["Title"] = "Inventory";
+}
+
+<div class="page-title">
+    <h1 class="h3 mb-0">Inventory</h1>
+    <a class="btn btn-primary" asp-action="Create">Add Copy</a>
+</div>
+
+<div class="content-panel p-3">
+    <input class="form-control mb-3" placeholder="Filter inventory" data-table-filter="#inventoryTable" />
+    <table class="table table-hover align-middle" id="inventoryTable">
+        <thead><tr><th>ID</th><th>ISBN</th><th>Condition</th><th>Price</th><th>Purchased</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.InventoryId</td>
+                <td>@item.Isbn</td>
+                <td>@item.ConditionDescription</td>
+                <td>@item.Price?.ToString("C")</td>
+                <td>@item.Purchased</td>
+                <td class="text-end table-actions">
+                    <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.InventoryId" asp-route-isbn="@item.Isbn" asp-route-ranks="@item.Ranks" asp-route-purchased="@item.Purchased">Edit</a>
+                    <form class="d-inline" asp-action="Delete" asp-route-id="@item.InventoryId" method="post" data-confirm="Delete this inventory item?">
+                        <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

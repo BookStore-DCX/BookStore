@@ -52,7 +52,7 @@ namespace BookStore.Services.Implementations
 
             var user = _mapper.Map<User>(dto);
             user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-            user.RoleNumber = 1;
+            user.RoleNumber = 2;
 
             await _userRepo.AddAsync(user);
             await _uow.SaveChangesAsync();

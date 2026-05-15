@@ -63,11 +63,10 @@ namespace BookStore
             builder.Services.AddDbContext<BookContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            var mapperConfig = new MapperConfiguration(config =>
+            builder.Services.AddAutoMapper(config =>
             {
                 config.AddProfile<MappingProfile>();
             });
-            builder.Services.AddSingleton(mapperConfig.CreateMapper());
 
             builder.Services.AddFluentValidationAutoValidation();
             builder.Services.AddFluentValidationClientsideAdapters();

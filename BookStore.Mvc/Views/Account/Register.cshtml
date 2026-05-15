@@ -1,0 +1,54 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="auth-page">
+    <section class="auth-intro">
+        <p class="section-kicker">Create your reader account</p>
+        <h1>Join BookNest</h1>
+        <p>Save your shopping cart, write reviews, and keep track of your purchases.</p>
+        <div class="auth-book-row" aria-hidden="true">
+            <span></span><span></span><span></span>
+        </div>
+    </section>
+
+    <section class="content-panel p-4">
+        <h2 class="h4 mb-3">Register</h2>
+        <form asp-action="Register" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="UserName" class="form-label"></label>
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="PhoneNumber" class="form-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="10 digits" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" class="form-control" placeholder="Example: Reader@123" />
+                    <div class="form-text">Use at least 8 characters with uppercase, lowercase, number, and special character.</div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mt-4">
+                <button class="btn btn-brand" type="submit">Create Account</button>
+                <a class="btn btn-link" asp-action="Login">Already have an account?</a>
+            </div>
+        </form>
+    </section>
+</div>

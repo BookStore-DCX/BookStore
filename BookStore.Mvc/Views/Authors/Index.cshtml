@@ -1,0 +1,37 @@
+@model List<AuthorViewModel>
+@{
+    ViewData["Title"] = "Authors";
+}
+
+<div class="page-title">
+    <h1 class="h3 mb-0">Authors</h1>
+    @if (User.IsInRole("Admin") || User.IsInRole("StoreOwner"))
+    {
+        <a class="btn btn-primary" asp-action="Create">Add Author</a>
+    }
+</div>
+
+<div class="content-panel p-3">
+    <input class="form-control mb-3" placeholder="Filter authors" data-table-filter="#authorsTable" />
+    <table class="table table-hover align-middle" id="authorsTable">
+        <thead><tr><th>ID</th><th>Name</th><th class="table-actions"></th></tr></thead>
+        <tbody>
+        @foreach (var author in Model)
+        {
+            <tr>
+                <td>@author.AuthorId</td>
+                <td>@author.FirstName @author.LastName</td>
+                <td class="text-end">
+                    @if (User.IsInRole("Admin") || User.IsInRole("StoreOwner"))
+                    {
+                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@author.AuthorId">Edit</a>
+                        <form class="d-inline" asp-action="Delete" asp-route-id="@author.AuthorId" method="post" data-confirm="Delete this author?">
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

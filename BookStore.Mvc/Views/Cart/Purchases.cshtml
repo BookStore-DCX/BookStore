@@ -1,0 +1,23 @@
+@model List<PurchaseLogViewModel>
+@{
+    ViewData["Title"] = "Purchases";
+}
+
+<div class="page-title">
+    <h1 class="h3 mb-0">Purchase History</h1>
+</div>
+
+<div class="content-panel p-3">
+    <table class="table align-middle">
+        <thead><tr><th>User ID</th><th>Inventory ID</th></tr></thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.UserId</td>
+                <td>@item.InventoryId</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

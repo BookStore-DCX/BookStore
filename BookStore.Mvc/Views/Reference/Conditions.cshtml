@@ -1,0 +1,14 @@
+@model List<BookConditionViewModel>
+@{
+    ViewData["Title"] = "Book Conditions";
+}
+
+<div class="page-title"><h1 class="h3 mb-0">Book Conditions</h1></div>
+<div class="content-panel p-3">
+    <table class="table"><thead><tr><th>Rank</th><th>Description</th><th>Full Description</th><th>Price</th></tr></thead><tbody>
+    @foreach (var item in Model)
+    {
+        <tr><td>@item.Ranks</td><td>@item.Description</td><td>@item.FullDescription</td><td>@item.Price.ToString("C")</td></tr>
+    }
+    </tbody></table>
+</div>

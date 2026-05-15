@@ -1,0 +1,38 @@
+@model UserUpdateViewModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="content-panel p-4 form-shell">
+    <h1 class="h3 mb-3">Edit User</h1>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        <input asp-for="UserName" type="hidden" />
+        <div class="mb-3">
+            <label asp-for="FirstName" class="form-label"></label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="LastName" class="form-label"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="PhoneNumber" class="form-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="RoleNumber" class="form-label"></label>
+            <select asp-for="RoleNumber" class="form-select">
+                <option value="">Keep current</option>
+                <option value="1">Guest</option>
+                <option value="2">RegisteredUser</option>
+                <option value="3">StoreOwner</option>
+                <option value="4">Admin</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a class="btn btn-link" asp-action="Index">Cancel</a>
+    </form>
+</div>

@@ -1,0 +1,33 @@
+@model List<UserViewModel>
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div class="page-title">
+    <h1 class="h3 mb-0">Users</h1>
+</div>
+
+<div class="content-panel p-3">
+    <input class="form-control mb-3" placeholder="Filter users" data-table-filter="#usersTable" />
+    <table class="table table-hover align-middle" id="usersTable">
+        <thead><tr><th>ID</th><th>Name</th><th>Username</th><th>Phone</th><th>Role</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserId</td>
+                <td>@user.FirstName @user.LastName</td>
+                <td>@user.UserName</td>
+                <td>@user.PhoneNumber</td>
+                <td>@user.RoleName</td>
+                <td class="text-end table-actions">
+                    <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@user.UserName">Edit</a>
+                    <form class="d-inline" asp-action="Delete" asp-route-id="@user.UserName" method="post" data-confirm="Delete this user?">
+                        <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

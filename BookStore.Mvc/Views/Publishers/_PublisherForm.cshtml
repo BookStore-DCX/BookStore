@@ -1,0 +1,23 @@
+@model PublisherFormViewModel
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <input asp-for="PublisherId" type="hidden" />
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="City" class="form-label"></label>
+        <input asp-for="City" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="StateCode" class="form-label"></label>
+        <select asp-for="StateCode" asp-items="ViewBag.States" class="form-select">
+            <option value="">Choose state</option>
+        </select>
+    </div>
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn btn-link" asp-action="Index">Cancel</a>
+</form>

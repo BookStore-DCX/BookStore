@@ -1,0 +1,89 @@
+@model BookDetailViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="content-panel p-4 mb-4">
+    <div class="d-flex justify-content-between flex-wrap gap-3">
+        <div>
+            <h1 class="h3">@Model.Title</h1>
+            <p class="text-muted mb-1">@Model.Isbn</p>
+            <p>@Model.Description</p>
+            <p class="mb-1"><strong>Category:</strong> @Model.Category</p>
+            <p class="mb-1"><strong>Publisher:</strong> @Model.Publisher</p>
+            <p class="mb-0"><strong>Authors:</strong> @string.Join(", ", Model.Authors)</p>
+        </div>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <form asp-controller="Cart" asp-action="Add" method="post">
+                <input type="hidden" name="isbn" value="@Model.Isbn" />
+                <button class="btn btn-warning" type="submit">Add to Cart</button>
+            </form>
+        }
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="content-panel p-3">
+            <h2 class="h5">Available Copies</h2>
+            <table class="table table-sm align-middle">
+                <thead><tr><th>Inventory</th><th>Condition</th><th>Price</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var copy in Model.Copies)
+                {
+                    <tr>
+                        <td>@copy.InventoryId</td>
+                        <td>@copy.ConditionDescription</td>
+                        <td>@copy.Price?.ToString("C")</td>
+                        <td>
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <form asp-controller="Cart" asp-action="Purchase" method="post">
+                                    <input type="hidden" name="inventoryId" value="@copy.InventoryId" />
+                                    <button class="btn btn-sm btn-success" type="submit">Buy</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="content-panel p-3">
+            <h2 class="h5">Reviews</h2>
+            @foreach (var review in Model.Reviews)
+            {
+                <div class="border-bottom py-2">
+                    <div class="fw-semibold">Rating: @review.Rating</div>
+                    <div>@review.Comments</div>
+                    @if (User.IsInRole("Admin") || User.IsInRole("StoreOwner") || User.IsInRole("RegisteredUser"))
+                    {
+                        <form asp-controller="Reviews" asp-action="Delete" method="post" class="mt-2" data-confirm="Delete this review?">
+                            <input type="hidden" name="isbn" value="@review.Isbn" />
+                            <input type="hidden" name="reviewerId" value="@review.ReviewerId" />
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                        </form>
+                    }
+                </div>
+            }
+            @if (User.IsInRole("RegisteredUser"))
+            {
+                <form asp-controller="Reviews" asp-action="Create" method="post" class="mt-3">
+                    <input type="hidden" name="Isbn" value="@Model.Isbn" />
+                    <div class="mb-2">
+                        <label class="form-label" for="Rating">Rating</label>
+                        <input class="form-control" id="Rating" name="Rating" type="number" min="1" max="5" />
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="Comments">Comments</label>
+                        <textarea class="form-control" id="Comments" name="Comments"></textarea>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Post Review</button>
+                </form>
+            }
+        </div>
+    </div>
+</div>

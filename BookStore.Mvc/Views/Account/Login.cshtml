@@ -1,0 +1,35 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="auth-page">
+    <section class="auth-intro">
+        <p class="section-kicker">Welcome back</p>
+        <h1>Return to your shelf</h1>
+        <p>Login to manage your cart, reviews, dashboard, and bookstore tools.</p>
+        <div class="auth-book-row" aria-hidden="true">
+            <span></span><span></span><span></span>
+        </div>
+    </section>
+
+    <section class="content-panel p-4">
+        <h2 class="h4 mb-3">Login</h2>
+        <form asp-action="Login" method="post">
+            <input asp-for="ReturnUrl" type="hidden" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <div class="mb-3">
+                <label asp-for="UserName" class="form-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <button class="btn btn-brand" type="submit">Login</button>
+            <a class="btn btn-link" asp-action="Register">Create account</a>
+        </form>
+    </section>
+</div>
