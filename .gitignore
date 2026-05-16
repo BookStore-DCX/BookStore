@@ -24,6 +24,9 @@ TestResults/
 node_modules/
 dist/
 
+# Prevent Git from ignoring dist folders inside your static web assets
+!**/wwwroot/lib/**/dist/
+
 ## OS Files
 Thumbs.db
 ehthumbs.db
