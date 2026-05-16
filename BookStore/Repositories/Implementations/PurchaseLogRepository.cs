@@ -13,6 +13,16 @@ namespace BookStore.Repositories.Implementations
         }
 
         public async Task<IEnumerable<Purchaselog>> GetPurchasesByUserAsync(int userId)
-            => await _dbSet.AsNoTracking().Where(p => p.UserId == userId).ToListAsync();
+            => await _dbSet
+                .AsNoTracking()
+                .Include(p => p.Inventory)
+                    .ThenInclude(i => i.IsbnNavigation)
+                        .ThenInclude(b => b.Bookauthors)
+                            .ThenInclude(ba => ba.Author)
+                .Include(p => p.Inventory)
+                    .ThenInclude(i => i.RanksNavigation)
+                .Where(p => p.UserId == userId)
+                .OrderByDescending(p => p.InventoryId)
+                .ToListAsync();
     }
 }

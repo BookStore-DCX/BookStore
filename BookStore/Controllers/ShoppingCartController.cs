@@ -6,12 +6,13 @@ using BookStore.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BookStore.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "RegisteredUser,Admin,StoreOwner")]
     public class ShoppingCartController : ControllerBase
     {
         private readonly IUnitOfWork _uow; private readonly IMapper _mapper;
@@ -20,6 +21,7 @@ namespace BookStore.Controllers
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetCart(int userId)
         {
+            userId = GetCurrentUserId();
             var cart = await _uow.ShoppingCarts.GetCartByUserAsync(userId);
             return Ok(ApiResponse<IEnumerable<ShoppingCartDto>>.Ok(_mapper.Map<IEnumerable<ShoppingCartDto>>(cart)));
         }
@@ -27,6 +29,7 @@ namespace BookStore.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToCart([FromBody] ShoppingCartCreateDto dto)
         {
+            dto.UserId = GetCurrentUserId();
             var item = _mapper.Map<Shoppingcart>(dto);
             await _uow.ShoppingCarts.AddAsync(item);
             await _uow.SaveChangesAsync();
@@ -34,16 +37,28 @@ namespace BookStore.Controllers
                 ApiResponse<ShoppingCartDto>.Created(_mapper.Map<ShoppingCartDto>(item)));
         }
 
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> RemoveItem(int userId)
+        [HttpDelete("{userId}/{isbn}")]
+        public async Task<IActionResult> RemoveItem(int userId, string isbn)
         {
+            userId = GetCurrentUserId();
+            await _uow.ShoppingCarts.RemoveFromCartAsync(userId, isbn);
+            await _uow.SaveChangesAsync();
             return Ok(ApiResponse<object>.Ok(new { message = "Item removed from cart" }));
         }
 
         [HttpDelete("{userId}/clear")]
         public async Task<IActionResult> ClearCart(int userId)
         {
+            userId = GetCurrentUserId();
+            await _uow.ShoppingCarts.ClearCartAsync(userId);
+            await _uow.SaveChangesAsync();
             return Ok(ApiResponse<object>.Ok(new { message = "Cart cleared" }));
+        }
+
+        private int GetCurrentUserId()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("userId");
+            return int.TryParse(userIdClaim, out var userId) ? userId : 0;
         }
     }
 }

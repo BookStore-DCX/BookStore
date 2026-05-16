@@ -33,7 +33,7 @@
         <div class="content-panel p-3">
             <h2 class="h5">Available Copies</h2>
             <table class="table table-sm align-middle">
-                <thead><tr><th>Sr.No</th><th>Condition</th><th>Price</th><th></th></tr></thead>
+                <thead><tr><th>Sr.No</th><th>Condition</th><th>Price</th></tr></thead>
                 <tbody>
                     @{
                         int i = 1;
@@ -44,15 +44,6 @@
                             <td>@(i++)</td>
                             <td>@(string.IsNullOrWhiteSpace(copy.Condition) ? "N/A" : copy.Condition)</td>
                             <td>@copy.Price?.ToString("C")</td>
-                            <td>
-                                @if (User.Identity?.IsAuthenticated == true)
-                                {
-                                    <form asp-controller="Cart" asp-action="Purchase" method="post">
-                                        <input type="hidden" name="inventoryId" value="@copy.InventoryId" />
-                                        <button class="btn btn-sm btn-success" type="submit">Buy</button>
-                                    </form>
-                                }
-                            </td>
                         </tr>
                 }
                 </tbody>

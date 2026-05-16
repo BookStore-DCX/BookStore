@@ -5,28 +5,100 @@
 
 <div class="page-title">
     <h1 class="h3 mb-0">Shopping Cart</h1>
-    <form asp-action="Clear" method="post" data-confirm="Clear your cart?">
-        <button class="btn btn-outline-danger" type="submit">Clear Cart</button>
-    </form>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Purchases">Purchase History</a>
+        <button class="btn btn-success" type="submit" form="checkoutForm" @(Model.Any(item => item.AvailableCopies.Count > 0) ? "" : "disabled")>Checkout</button>
+        <form asp-action="Clear" method="post" data-confirm="Clear your cart?">
+            <button class="btn btn-outline-danger" type="submit">Clear Cart</button>
+        </form>
+    </div>
 </div>
 
 <div class="content-panel p-3">
-    <table class="table align-middle">
-        <thead><tr><th>ISBN</th><th>Title</th><th></th></tr></thead>
-        <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Isbn</td>
-                <td>@item.BookTitle</td>
-                <td class="text-end">
-                    <a class="btn btn-sm btn-outline-primary" asp-controller="Books" asp-action="Details" asp-route-id="@item.Isbn">View</a>
-                    <form class="d-inline" asp-action="Remove" method="post" data-confirm="Remove this item?">
-                        <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
-                    </form>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    @if (Model.Count == 0)
+    {
+        <p class="text-muted mb-0">Your cart is empty.</p>
+    }
+    else
+    {
+        <form id="checkoutForm" asp-action="Checkout" method="post"></form>
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>Condition</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    var selectedCopy = item.AvailableCopies.FirstOrDefault(c => c.InventoryId == item.InventoryId)
+                        ?? item.AvailableCopies.FirstOrDefault();
+                    <tr>
+                        <td>@(item.BookTitle ?? item.Isbn)</td>
+                            <td>
+                                @if (item.AvailableCopies.Count > 0)
+                                {
+                                <select class="form-select form-select-sm cart-copy-select" name="inventoryIds" form="checkoutForm" data-isbn="@item.Isbn" aria-label="Choose condition">
+                                    @foreach (var copy in item.AvailableCopies)
+                                    {
+                                        <option value="@copy.InventoryId" data-price="@copy.Price?.ToString("0.00")" selected="@(copy.InventoryId == selectedCopy?.InventoryId)">
+                                            @(copy.Condition ?? "Unknown")
+                                        </option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No available copy</span>
+                            }
+                        </td>
+                        <td class="cart-copy-price">@(selectedCopy?.Price?.ToString("C") ?? "Not available")</td>
+                        <td class="text-end">
+                            <form class="d-inline" asp-action="Remove" method="post" data-confirm="Remove this item?">
+                                <input type="hidden" name="isbn" value="@item.Isbn" />
+                                <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        const verificationToken = document.querySelector("#checkoutForm input[name='__RequestVerificationToken']")?.value;
+
+        document.querySelectorAll(".cart-copy-select").forEach(function (select) {
+            select.addEventListener("change", async function () {
+                const selected = select.options[select.selectedIndex];
+                const row = select.closest("tr");
+                const priceCell = row?.querySelector(".cart-copy-price");
+                const price = Number(selected.dataset.price);
+
+                if (priceCell) {
+                    priceCell.textContent = Number.isFinite(price)
+                        ? new Intl.NumberFormat(undefined, { style: "currency", currency: "INR" }).format(price)
+                        : "Not available";
+                }
+
+                const body = new URLSearchParams();
+                body.set("__RequestVerificationToken", verificationToken ?? "");
+                body.set("isbn", select.dataset.isbn ?? "");
+                body.set("inventoryId", select.value);
+
+                await fetch("@Url.Action("SelectCopy", "Cart")", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body
+                });
+            });
+        });
+    </script>
+}

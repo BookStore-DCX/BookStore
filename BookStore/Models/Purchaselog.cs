@@ -9,5 +9,7 @@ public partial class Purchaselog
 
     public int InventoryId { get; set; }
 
+    public virtual Inventory Inventory { get; set; } = null!;
+
     public virtual User User { get; set; } = null!;
 }

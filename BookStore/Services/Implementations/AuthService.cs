@@ -15,14 +15,16 @@ namespace BookStore.Services.Implementations
         private readonly IUnitOfWork _uow;
         private readonly IJwtService _jwt;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _config;
 
-        public AuthService(IAuthRepository authRepo, IUserRepository userRepo, IUnitOfWork uow, IJwtService jwt, IMapper mapper)
+        public AuthService(IAuthRepository authRepo, IUserRepository userRepo, IUnitOfWork uow, IJwtService jwt, IMapper mapper, IConfiguration config)
         {
             _authRepo = authRepo;
             _userRepo = userRepo;
             _uow = uow;
             _jwt = jwt;
             _mapper = mapper;
+            _config = config;
         }
 
         public async Task<AuthResponseDto?> LoginAsync(LoginDto dto)
@@ -33,13 +35,15 @@ namespace BookStore.Services.Implementations
                 return null;
             }
 
+            var expiryMinutes = int.Parse(_config["JwtSettings:ExpiryMinutes"] ?? "30");
+
             return new AuthResponseDto
             {
                 UserId = user.UserId,
                 Token = _jwt.GenerateToken(user),
                 UserName = user.UserName,
                 Role = (user.RoleNumberNavigation?.PermRole1 ?? "Guest").Trim(),
-                Expiry = DateTime.UtcNow.AddMinutes(60),
+                Expiry = DateTime.UtcNow.AddMinutes(expiryMinutes),
             };
         }
 

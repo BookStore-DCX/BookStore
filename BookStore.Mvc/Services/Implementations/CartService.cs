@@ -17,7 +17,7 @@ public class CartService : ICartService
 
     public Task<ApiResult<ShoppingCartItemViewModel>> AddAsync(ShoppingCartCreateViewModel model) => _apiClient.PostAsync<ShoppingCartCreateViewModel, ShoppingCartItemViewModel>("ShoppingCart", model);
 
-    public Task<ApiResult<bool>> RemoveAsync(int userId) => _apiClient.DeleteAsync($"ShoppingCart/{userId}");
+    public Task<ApiResult<bool>> RemoveAsync(int userId, string isbn) => _apiClient.DeleteAsync($"ShoppingCart/{userId}/{Uri.EscapeDataString(isbn)}");
 
     public Task<ApiResult<bool>> ClearAsync(int userId) => _apiClient.DeleteAsync($"ShoppingCart/{userId}/clear");
 

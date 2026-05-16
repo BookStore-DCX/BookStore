@@ -45,11 +45,49 @@ namespace BookStore.Mappings
                         s => s.IsbnNavigation != null
                             ? s.IsbnNavigation.Title
                             : null
-                    ));
+                    ))
+                .ForMember(
+                    d => d.InventoryId,
+                    o => o.MapFrom(s => GetDisplayCopy(s) != null ? GetDisplayCopy(s)!.InventoryId : (int?)null))
+                .ForMember(
+                    d => d.Condition,
+                    o => o.MapFrom(s => GetDisplayCopy(s) != null ? GetDisplayCopy(s)!.RanksNavigation.Description : null))
+                .ForMember(
+                    d => d.Price,
+                    o => o.MapFrom(s => GetDisplayCopy(s) != null ? GetDisplayCopy(s)!.RanksNavigation.Price : null))
+                .ForMember(
+                    d => d.AvailableCopies,
+                    o => o.MapFrom(s => GetAvailableCopies(s)));
+
+            CreateMap<Inventory, ShoppingCartCopyDto>()
+                .ForMember(
+                    d => d.Condition,
+                    o => o.MapFrom(s => s.RanksNavigation.Description))
+                .ForMember(
+                    d => d.Price,
+                    o => o.MapFrom(s => s.RanksNavigation.Price));
 
             CreateMap<ShoppingCartCreateDto, Shoppingcart>();
 
-            CreateMap<Purchaselog, DTOs.PurchaseLog.PurchaseLogDto>().ReverseMap();
+            CreateMap<Purchaselog, DTOs.PurchaseLog.PurchaseLogDto>()
+                .ForMember(
+                    d => d.BookTitle,
+                    o => o.MapFrom(s => s.Inventory != null ? s.Inventory.IsbnNavigation.Title : null))
+                .ForMember(
+                    d => d.AuthorName,
+                    o => o.MapFrom(s => s.Inventory != null
+                        ? string.Join(", ", s.Inventory.IsbnNavigation.Bookauthors
+                            .OrderByDescending(a => a.PrimaryAuthor == "Y")
+                            .ThenBy(a => a.Author.LastName)
+                            .ThenBy(a => a.Author.FirstName)
+                            .Select(a => $"{a.Author.FirstName} {a.Author.LastName}".Trim()))
+                        : null))
+                .ForMember(
+                    d => d.Condition,
+                    o => o.MapFrom(s => s.Inventory != null ? s.Inventory.RanksNavigation.Description : null))
+                .ForMember(
+                    d => d.Price,
+                    o => o.MapFrom(s => s.Inventory != null ? s.Inventory.RanksNavigation.Price : null));
 
             CreateMap<DTOs.PurchaseLog.PurchaseLogCreateDto, Purchaselog>();
 
@@ -107,6 +145,21 @@ namespace BookStore.Mappings
                 .ForMember(d => d.Publisher, o => o.MapFrom(s => s.Publisher!.Name))
                 .ForMember(d => d.Authors, o => o.MapFrom(s => s.Bookauthors.Select(a => $"{a.Author.FirstName} {a.Author.LastName}".Trim())))
                 .ForMember(d => d.Copies, o => o.MapFrom(s => s.Inventories));
+        }
+
+        private static Inventory? GetDisplayCopy(Shoppingcart cart)
+        {
+            return GetAvailableCopies(cart)
+                .FirstOrDefault();
+        }
+
+        private static List<Inventory> GetAvailableCopies(Shoppingcart cart)
+        {
+            return cart.IsbnNavigation?.Inventories
+                .Where(i => i.Purchased == 0)
+                .OrderBy(i => i.RanksNavigation.Price)
+                .ThenBy(i => i.InventoryId)
+                .ToList() ?? new List<Inventory>();
         }
     }
 }

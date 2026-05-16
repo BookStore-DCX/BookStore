@@ -38,6 +38,7 @@
                             @if (User.IsInRole("RegisteredUser") || User.IsInRole("Admin") || User.IsInRole("StoreOwner"))
                             {
                                 <li class="nav-item"><a class="nav-link" asp-controller="Cart" asp-action="Index">Cart <span class="badge cart-badge" id="cartCountBadge"></span></a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Cart" asp-action="Purchases">Purchase History</a></li>
                             }
                         }
                     </ul>

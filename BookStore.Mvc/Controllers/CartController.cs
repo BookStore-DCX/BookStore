@@ -3,12 +3,14 @@ using BookStore.Mvc.Models.Catalog;
 using BookStore.Mvc.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace BookStore.Mvc.Controllers;
 
 [Authorize(Roles = "RegisteredUser,Admin,StoreOwner")]
 public class CartController : Controller
 {
+    private const string SelectedCopiesSessionKey = "CartSelectedCopies";
     private readonly ICartService _cartService;
 
     public CartController(ICartService cartService)
@@ -21,7 +23,10 @@ public class CartController : Controller
         var userId = GetUserId();
         var result = await _cartService.GetCartAsync(userId);
         if (!result.IsSuccess) this.Error(result.Message);
-        return View(result.Data ?? new());
+
+        var cart = result.Data ?? new();
+        ApplySelectedCopies(cart);
+        return View(cart);
     }
 
     [HttpGet]
@@ -49,9 +54,10 @@ public class CartController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Remove()
+    public async Task<IActionResult> Remove(string isbn)
     {
-        var result = await _cartService.RemoveAsync(GetUserId());
+        var result = await _cartService.RemoveAsync(GetUserId(), isbn);
+        RemoveSelectedCopy(isbn);
         if (result.IsSuccess) this.Success("Item removed.");
         else this.Error(result.Message);
         return RedirectToAction(nameof(Index));
@@ -62,6 +68,7 @@ public class CartController : Controller
     public async Task<IActionResult> Clear()
     {
         var result = await _cartService.ClearAsync(GetUserId());
+        ClearSelectedCopies();
         if (result.IsSuccess) this.Success("Cart cleared.");
         else this.Error(result.Message);
         return RedirectToAction(nameof(Index));
@@ -84,9 +91,91 @@ public class CartController : Controller
         return View(result.Data ?? new());
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Checkout(List<int> inventoryIds)
+    {
+        if (inventoryIds.Count == 0)
+        {
+            this.Error("Select at least one available copy before checkout.");
+            return RedirectToAction(nameof(Index));
+        }
+
+        foreach (var inventoryId in inventoryIds.Distinct())
+        {
+            var result = await _cartService.PurchaseAsync(inventoryId);
+            if (!result.IsSuccess)
+            {
+                this.Error(result.Message);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        await _cartService.ClearAsync(GetUserId());
+        ClearSelectedCopies();
+        this.Success("Checkout complete. Your purchase history has been updated.");
+        return RedirectToAction(nameof(Purchases));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult SelectCopy(string isbn, int inventoryId)
+    {
+        var selectedCopies = GetSelectedCopies();
+        selectedCopies[isbn] = inventoryId;
+        SaveSelectedCopies(selectedCopies);
+        return Ok();
+    }
+
     private int GetUserId()
     {
         var raw = HttpContext.Session.GetString(SessionKeys.UserId);
         return int.TryParse(raw, out var userId) ? userId : 0;
+    }
+
+    private void ApplySelectedCopies(List<ShoppingCartItemViewModel> cart)
+    {
+        var selectedCopies = GetSelectedCopies();
+        foreach (var item in cart)
+        {
+            if (selectedCopies.TryGetValue(item.Isbn, out var inventoryId)
+                && item.AvailableCopies.Any(copy => copy.InventoryId == inventoryId))
+            {
+                var selectedCopy = item.AvailableCopies.First(copy => copy.InventoryId == inventoryId);
+                item.InventoryId = selectedCopy.InventoryId;
+                item.Condition = selectedCopy.Condition;
+                item.Price = selectedCopy.Price;
+            }
+        }
+    }
+
+    private Dictionary<string, int> GetSelectedCopies()
+    {
+        var raw = HttpContext.Session.GetString(SelectedCopiesSessionKey);
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return new Dictionary<string, int>();
+        }
+
+        return JsonSerializer.Deserialize<Dictionary<string, int>>(raw) ?? new Dictionary<string, int>();
+    }
+
+    private void SaveSelectedCopies(Dictionary<string, int> selectedCopies)
+    {
+        HttpContext.Session.SetString(SelectedCopiesSessionKey, JsonSerializer.Serialize(selectedCopies));
+    }
+
+    private void RemoveSelectedCopy(string isbn)
+    {
+        var selectedCopies = GetSelectedCopies();
+        if (selectedCopies.Remove(isbn))
+        {
+            SaveSelectedCopies(selectedCopies);
+        }
+    }
+
+    private void ClearSelectedCopies()
+    {
+        HttpContext.Session.Remove(SelectedCopiesSessionKey);
     }
 }

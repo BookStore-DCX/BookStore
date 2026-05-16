@@ -23,6 +23,8 @@ TestResults/
 ## Node/Frontend (if applicable)
 node_modules/
 dist/
+!BookStore.Mvc/wwwroot/lib/bootstrap/dist/
+!BookStore.Mvc/wwwroot/lib/bootstrap/dist/**
 
 ## OS Files
 Thumbs.db

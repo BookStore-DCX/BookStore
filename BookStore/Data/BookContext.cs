@@ -245,6 +245,11 @@ public partial class BookContext : DbContext
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.InventoryId).HasColumnName("InventoryID");
 
+            entity.HasOne(d => d.Inventory).WithMany()
+                .HasForeignKey(d => d.InventoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("purchaselog_inventory_fk");
+
             entity.HasOne(d => d.User).WithMany(p => p.Purchaselogs)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)

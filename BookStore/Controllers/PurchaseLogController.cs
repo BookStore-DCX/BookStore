@@ -43,8 +43,21 @@ namespace BookStore.Controllers
 
             dto.UserId = userId;
 
+            var inventory = await _uow.Inventories.GetByIdAsync(dto.InventoryId);
+            if (inventory == null)
+            {
+                throw new NotFoundException($"Inventory item {dto.InventoryId} not found.");
+            }
+
+            if (inventory.Purchased != 0)
+            {
+                throw new BadRequestException("This copy has already been purchased.");
+            }
+
             var log = _mapper.Map<Purchaselog>(dto);
             await _uow.PurchaseLogs.AddAsync(log);
+            inventory.Purchased = 1;
+            await _uow.Inventories.UpdateAsync(inventory);
             await _uow.SaveChangesAsync();
             return CreatedAtAction(nameof(GetMy), ApiResponse<PurchaseLogDto>.Created(_mapper.Map<PurchaseLogDto>(log)));
         }

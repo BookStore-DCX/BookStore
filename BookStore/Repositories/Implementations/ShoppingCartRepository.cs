@@ -14,14 +14,11 @@ namespace BookStore.Repositories.Implementations
 
         public async Task<IEnumerable<Shoppingcart>> GetCartByUserAsync(int userId)
             => await _dbSet
-                .Where(s => s.UserId == userId)
-                .Join(
-                    _context.Set<Book>(),
-                    s => s.Isbn,
-                    b => b.Isbn,
-                    (s, b) => s
-                )
                 .AsNoTracking()
+                .Where(s => s.UserId == userId)
+                .Include(s => s.IsbnNavigation)
+                    .ThenInclude(b => b.Inventories)
+                        .ThenInclude(i => i.RanksNavigation)
                 .ToListAsync();
 
         public async Task RemoveFromCartAsync(int userId, string isbn)
