@@ -9,6 +9,7 @@ public class ShoppingCartItemViewModel
     public string? Condition { get; set; }
     public decimal? Price { get; set; }
     public List<ShoppingCartCopyViewModel> AvailableCopies { get; set; } = new();
+    public List<int> SelectedInventoryIds { get; set; } = new();
 }
 
 public class ShoppingCartCopyViewModel

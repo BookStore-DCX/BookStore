@@ -49,6 +49,18 @@ namespace BookStore.Controllers
                 throw new NotFoundException($"Inventory item {dto.InventoryId} not found.");
             }
 
+            var existingLog = await _uow.PurchaseLogs.GetByIdAsync(dto.UserId, dto.InventoryId);
+            if (existingLog != null)
+            {
+                inventory.Purchased = 1;
+                await _uow.Inventories.UpdateAsync(inventory);
+                await _uow.SaveChangesAsync();
+
+                return Ok(ApiResponse<PurchaseLogDto>.Ok(
+                    _mapper.Map<PurchaseLogDto>(existingLog),
+                    "This copy is already in your purchase history"));
+            }
+
             if (inventory.Purchased != 0)
             {
                 throw new BadRequestException("This copy has already been purchased.");

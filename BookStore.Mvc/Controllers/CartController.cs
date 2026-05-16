@@ -46,7 +46,7 @@ public class CartController : Controller
             Isbn = isbn
         });
 
-        if (result.IsSuccess) this.Success("Book added to cart.");
+        if (result.IsSuccess) this.Success(result.Message == "Book is already in your cart" ? result.Message : "Book added to cart.");
         else this.Error(result.Message);
 
         return RedirectToAction("Details", "Books", new { id = isbn });
@@ -119,10 +119,13 @@ public class CartController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult SelectCopy(string isbn, int inventoryId)
+    public IActionResult SelectCopy(string isbn, List<int> inventoryIds)
     {
         var selectedCopies = GetSelectedCopies();
-        selectedCopies[isbn] = inventoryId;
+        selectedCopies[isbn] = inventoryIds
+            .Where(id => id > 0)
+            .Distinct()
+            .ToList();
         SaveSelectedCopies(selectedCopies);
         return Ok();
     }
@@ -138,10 +141,24 @@ public class CartController : Controller
         var selectedCopies = GetSelectedCopies();
         foreach (var item in cart)
         {
-            if (selectedCopies.TryGetValue(item.Isbn, out var inventoryId)
-                && item.AvailableCopies.Any(copy => copy.InventoryId == inventoryId))
+            if (selectedCopies.TryGetValue(item.Isbn, out var inventoryIds))
             {
-                var selectedCopy = item.AvailableCopies.First(copy => copy.InventoryId == inventoryId);
+                item.SelectedInventoryIds = inventoryIds
+                    .Where(id => item.AvailableCopies.Any(copy => copy.InventoryId == id))
+                    .ToList();
+            }
+
+            if (item.SelectedInventoryIds.Count == 0 && item.AvailableCopies.Count > 0)
+            {
+                item.SelectedInventoryIds = item.AvailableCopies
+                    .Take(1)
+                    .Select(copy => copy.InventoryId)
+                    .ToList();
+            }
+
+            var selectedCopy = item.AvailableCopies.FirstOrDefault(copy => copy.InventoryId == item.SelectedInventoryIds.FirstOrDefault());
+            if (selectedCopy != null)
+            {
                 item.InventoryId = selectedCopy.InventoryId;
                 item.Condition = selectedCopy.Condition;
                 item.Price = selectedCopy.Price;
@@ -149,18 +166,18 @@ public class CartController : Controller
         }
     }
 
-    private Dictionary<string, int> GetSelectedCopies()
+    private Dictionary<string, List<int>> GetSelectedCopies()
     {
         var raw = HttpContext.Session.GetString(SelectedCopiesSessionKey);
         if (string.IsNullOrWhiteSpace(raw))
         {
-            return new Dictionary<string, int>();
+            return new Dictionary<string, List<int>>();
         }
 
-        return JsonSerializer.Deserialize<Dictionary<string, int>>(raw) ?? new Dictionary<string, int>();
+        return JsonSerializer.Deserialize<Dictionary<string, List<int>>>(raw) ?? new Dictionary<string, List<int>>();
     }
 
-    private void SaveSelectedCopies(Dictionary<string, int> selectedCopies)
+    private void SaveSelectedCopies(Dictionary<string, List<int>> selectedCopies)
     {
         HttpContext.Session.SetString(SelectedCopiesSessionKey, JsonSerializer.Serialize(selectedCopies));
     }

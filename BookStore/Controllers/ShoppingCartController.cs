@@ -30,6 +30,16 @@ namespace BookStore.Controllers
         public async Task<IActionResult> AddToCart([FromBody] ShoppingCartCreateDto dto)
         {
             dto.UserId = GetCurrentUserId();
+
+            var existingCart = await _uow.ShoppingCarts.GetCartByUserAsync(dto.UserId);
+            var existingItem = existingCart.FirstOrDefault(item => item.Isbn == dto.Isbn);
+            if (existingItem != null)
+            {
+                return Ok(ApiResponse<ShoppingCartDto>.Ok(
+                    _mapper.Map<ShoppingCartDto>(existingItem),
+                    "Book is already in your cart"));
+            }
+
             var item = _mapper.Map<Shoppingcart>(dto);
             await _uow.ShoppingCarts.AddAsync(item);
             await _uow.SaveChangesAsync();

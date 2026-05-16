@@ -27,6 +27,7 @@
                 <thead>
                     <tr>
                         <th>Book Title</th>
+                        <th>Quantity</th>
                         <th>Condition</th>
                         <th>Price</th>
                         <th></th>
@@ -35,28 +36,57 @@
                 <tbody>
                 @foreach (var item in Model)
                 {
-                    var selectedCopy = item.AvailableCopies.FirstOrDefault(c => c.InventoryId == item.InventoryId)
-                        ?? item.AvailableCopies.FirstOrDefault();
+                    var selectedInventoryIds = item.SelectedInventoryIds.Count > 0
+                        ? item.SelectedInventoryIds
+                        : item.AvailableCopies.Take(1).Select(copy => copy.InventoryId).ToList();
+                    var quantity = Math.Max(1, selectedInventoryIds.Count);
+                    var selectedCopies = item.AvailableCopies
+                        .Where(copy => selectedInventoryIds.Contains(copy.InventoryId))
+                        .ToList();
+                    var lineTotal = selectedCopies.Sum(copy => copy.Price ?? 0);
                     <tr>
                         <td>@(item.BookTitle ?? item.Isbn)</td>
-                            <td>
-                                @if (item.AvailableCopies.Count > 0)
-                                {
-                                <select class="form-select form-select-sm cart-copy-select" name="inventoryIds" form="checkoutForm" data-isbn="@item.Isbn" aria-label="Choose condition">
-                                    @foreach (var copy in item.AvailableCopies)
+                        <td style="width: 140px;">
+                            @if (item.AvailableCopies.Count > 0)
+                            {
+                                <select class="form-select form-select-sm cart-quantity-select" data-isbn="@item.Isbn" aria-label="Choose quantity">
+                                    @for (var qty = 1; qty <= item.AvailableCopies.Count; qty++)
                                     {
-                                        <option value="@copy.InventoryId" data-price="@copy.Price?.ToString("0.00")" selected="@(copy.InventoryId == selectedCopy?.InventoryId)">
-                                            @(copy.Condition ?? "Unknown")
-                                        </option>
+                                        <option value="@qty" selected="@(qty == quantity)">@qty</option>
                                     }
                                 </select>
+                            }
+                            else
+                            {
+                                <span class="text-muted">0</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.AvailableCopies.Count > 0)
+                            {
+                                <div class="cart-copy-group d-grid gap-2" data-isbn="@item.Isbn">
+                                @for (var index = 0; index < item.AvailableCopies.Count; index++)
+                                {
+                                    var selectedInventoryId = index < selectedInventoryIds.Count
+                                        ? selectedInventoryIds[index]
+                                        : item.AvailableCopies[index].InventoryId;
+                                    <select class="form-select form-select-sm cart-copy-select @(index >= quantity ? "d-none" : "")" name="inventoryIds" form="checkoutForm" data-isbn="@item.Isbn" data-index="@index" aria-label="Choose condition" @(index >= quantity ? "disabled" : "")>
+                                        @foreach (var copy in item.AvailableCopies)
+                                        {
+                                            <option value="@copy.InventoryId" data-price="@copy.Price?.ToString("0.00")" selected="@(copy.InventoryId == selectedInventoryId)">
+                                                @(copy.Condition ?? "Unknown")
+                                            </option>
+                                        }
+                                    </select>
+                                }
+                                </div>
                             }
                             else
                             {
                                 <span class="text-muted">No available copy</span>
                             }
                         </td>
-                        <td class="cart-copy-price">@(selectedCopy?.Price?.ToString("C") ?? "Not available")</td>
+                        <td class="cart-line-total" data-total="@lineTotal.ToString("0.00")">@(lineTotal.ToString("C"))</td>
                         <td class="text-end">
                             <form class="d-inline" asp-action="Remove" method="post" data-confirm="Remove this item?">
                                 <input type="hidden" name="isbn" value="@item.Isbn" />
@@ -66,6 +96,13 @@
                     </tr>
                 }
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3" class="text-end">Total</th>
+                        <th id="cartTotal"></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     }
@@ -74,31 +111,124 @@
 @section Scripts {
     <script>
         const verificationToken = document.querySelector("#checkoutForm input[name='__RequestVerificationToken']")?.value;
+        const currencyFormatter = new Intl.NumberFormat(undefined, { style: "currency", currency: "INR" });
+
+        function getEnabledCopySelects(row) {
+            return Array.from(row.querySelectorAll(".cart-copy-select:not(:disabled)"));
+        }
+
+        function setUniqueSelections(row) {
+            const selects = getEnabledCopySelects(row);
+            const used = new Set();
+
+            selects.forEach(function (select) {
+                if (used.has(select.value)) {
+                    const replacement = Array.from(select.options).find(option => !used.has(option.value));
+                    if (replacement) {
+                        select.value = replacement.value;
+                    }
+                }
+
+                used.add(select.value);
+            });
+        }
+
+        function updateDisabledOptions(row) {
+            const selects = getEnabledCopySelects(row);
+            const selectedValues = selects.map(select => select.value);
+
+            selects.forEach(function (select) {
+                Array.from(select.options).forEach(function (option) {
+                    option.disabled = option.value !== select.value && selectedValues.includes(option.value);
+                });
+            });
+        }
+
+        function updateRowTotal(row) {
+            const total = getEnabledCopySelects(row).reduce(function (sum, select) {
+                const selected = select.options[select.selectedIndex];
+                const price = Number(selected.dataset.price);
+                return sum + (Number.isFinite(price) ? price : 0);
+            }, 0);
+
+            const totalCell = row.querySelector(".cart-line-total");
+            if (totalCell) {
+                totalCell.dataset.total = total.toFixed(2);
+                totalCell.textContent = currencyFormatter.format(total);
+            }
+        }
+
+        function updateCartTotal() {
+            const total = Array.from(document.querySelectorAll(".cart-line-total")).reduce(function (sum, cell) {
+                const value = Number(cell.dataset.total);
+                return sum + (Number.isFinite(value) ? value : 0);
+            }, 0);
+
+            const cartTotal = document.querySelector("#cartTotal");
+            if (cartTotal) {
+                cartTotal.textContent = currencyFormatter.format(total);
+            }
+        }
+
+        async function saveSelection(row) {
+            const firstSelect = row.querySelector(".cart-copy-select");
+            const body = new URLSearchParams();
+            body.set("__RequestVerificationToken", verificationToken ?? "");
+            body.set("isbn", firstSelect?.dataset.isbn ?? "");
+
+            getEnabledCopySelects(row).forEach(function (select) {
+                body.append("inventoryIds", select.value);
+            });
+
+            await fetch("@Url.Action("SelectCopy", "Cart")", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body
+            });
+        }
 
         document.querySelectorAll(".cart-copy-select").forEach(function (select) {
             select.addEventListener("change", async function () {
-                const selected = select.options[select.selectedIndex];
                 const row = select.closest("tr");
-                const priceCell = row?.querySelector(".cart-copy-price");
-                const price = Number(selected.dataset.price);
-
-                if (priceCell) {
-                    priceCell.textContent = Number.isFinite(price)
-                        ? new Intl.NumberFormat(undefined, { style: "currency", currency: "INR" }).format(price)
-                        : "Not available";
+                if (!row) {
+                    return;
                 }
 
-                const body = new URLSearchParams();
-                body.set("__RequestVerificationToken", verificationToken ?? "");
-                body.set("isbn", select.dataset.isbn ?? "");
-                body.set("inventoryId", select.value);
-
-                await fetch("@Url.Action("SelectCopy", "Cart")", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body
-                });
+                setUniqueSelections(row);
+                updateDisabledOptions(row);
+                updateRowTotal(row);
+                updateCartTotal();
+                await saveSelection(row);
             });
         });
+
+        document.querySelectorAll(".cart-quantity-select").forEach(function (select) {
+            select.addEventListener("change", async function () {
+                const row = select.closest("tr");
+                if (!row) {
+                    return;
+                }
+
+                const quantity = Number(select.value);
+                row.querySelectorAll(".cart-copy-select").forEach(function (copySelect, index) {
+                    const hidden = index >= quantity;
+                    copySelect.disabled = hidden;
+                    copySelect.classList.toggle("d-none", hidden);
+                });
+
+                setUniqueSelections(row);
+                updateDisabledOptions(row);
+                updateRowTotal(row);
+                updateCartTotal();
+                await saveSelection(row);
+            });
+        });
+
+        document.querySelectorAll("tbody tr").forEach(function (row) {
+            setUniqueSelections(row);
+            updateDisabledOptions(row);
+            updateRowTotal(row);
+        });
+        updateCartTotal();
     </script>
 }
