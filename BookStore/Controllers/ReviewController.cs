@@ -53,23 +53,25 @@ namespace BookStore.Controllers
             var user = await _uow.Users.GetByIdAsync(userId)
                 ?? throw new NotFoundException($"User with ID {userId} not found");
 
-            var reviewer = await _uow.Reviews.GetReviewerByIdAsync(userId);
+            var reviewerName = $"{user.FirstName} {user.LastName}".Trim();
+            if (string.IsNullOrWhiteSpace(reviewerName))
+            {
+                throw new BadRequestException("First and/or last name is required to post a review.");
+            }
+
+            if (reviewerName.Length > 20)
+            {
+                reviewerName = reviewerName[..20];
+            }
+
+            var reviewer = await _uow.Reviews.GetReviewerByNameAsync(reviewerName);
             if (reviewer == null)
             {
-                var reviewerName = $"{user.FirstName} {user.LastName}".Trim();
-                if (string.IsNullOrWhiteSpace(reviewerName))
-                {
-                    reviewerName = user.UserName;
-                }
-
-                if (reviewerName.Length > 20)
-                {
-                    reviewerName = reviewerName[..20];
-                }
+                var nextReviewerId = await _uow.Reviews.GetNextReviewerIdAsync();
 
                 reviewer = new Reviewer
                 {
-                    ReviewerId = userId,
+                    ReviewerId = nextReviewerId,
                     Name = reviewerName,
                     EmployedBy = null
                 };
@@ -105,9 +107,28 @@ namespace BookStore.Controllers
         }
 
         [HttpDelete("{isbn}/{reviewerId:int}")]
-        [Authorize(Roles = "Admin, StoreOwner, RegisteredUser")]
+        [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> Delete(string isbn, int reviewerId)
         {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("userId");
+            if (!int.TryParse(userIdClaim, out var currentUserId))
+            {
+                throw new UnauthorizedException("Invalid user id in token.");
+            }
+
+            var user = await _uow.Users.GetByIdAsync(currentUserId)
+                ?? throw new NotFoundException($"User with ID {currentUserId} not found");
+
+            var reviewer = await _uow.Reviews.GetReviewerByIdAsync(reviewerId)
+                ?? throw new NotFoundException($"Reviewer with ID {reviewerId} not found");
+
+            var currentUserFullName = $"{user.FirstName} {user.LastName}".Trim();
+            if (string.IsNullOrWhiteSpace(currentUserFullName) ||
+                !string.Equals(currentUserFullName, reviewer.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new UnauthorizedException("You can delete only your own review.");
+            }
+
             await _uow.Reviews.DeleteReviewAsync(isbn, reviewerId);
             await _uow.SaveChangesAsync();
             return Ok(ApiResponse<string>.Ok("Review deleted successfully"));

@@ -34,8 +34,11 @@ namespace BookStore.Repositories.Implementations
                 .FirstOrDefaultAsync(r => r.ReviewerId == reviewerId);
 
         public async Task<Reviewer?> GetReviewerByNameAsync(string fullName)
-            => await _context.Reviewers.AsNoTracking()
-                .FirstOrDefaultAsync(r => r.Name == fullName);
+        {
+            var normalized = fullName.Trim().ToLower();
+            return await _context.Reviewers.AsNoTracking()
+                .FirstOrDefaultAsync(r => r.Name != null && r.Name.ToLower() == normalized);
+        }
 
         public async Task<bool> ReviewExistsAsync(string isbn, int reviewerId)
             => await _dbSet.AsNoTracking()

@@ -58,7 +58,7 @@
                 <div class="border-bottom py-2">
                     <div class="fw-semibold"><strong>Rating:</strong> @review.Rating</div>
                     <div>@review.Comments</div>
-                    @if (User.IsInRole("Admin") || User.IsInRole("StoreOwner") || User.IsInRole("RegisteredUser"))
+                    @if (User.IsInRole("RegisteredUser"))
                     {
                         <form asp-controller="Reviews" asp-action="Delete" method="post" class="mt-2" data-confirm="Delete this review?">
                             <input type="hidden" name="isbn" value="@review.Isbn" />
@@ -74,7 +74,7 @@
                     <input type="hidden" name="Isbn" value="@Model.Isbn" />
                     <div class="mb-2">
                         <label class="form-label" for="Rating">Rating</label>
-                        <input class="form-control" id="Rating" name="Rating" type="number" min="1" max="5" />
+                        <input class="form-control" id="Rating" name="Rating" type="number" min="1" max="10" />
                     </div>
                     <div class="mb-2">
                         <label class="form-label" for="Comments">Comments</label>

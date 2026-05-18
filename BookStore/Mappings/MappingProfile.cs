@@ -144,7 +144,7 @@ namespace BookStore.Mappings
                 .ForMember(d => d.Category, o => o.MapFrom(s => s.CategoryNavigation!.CatDescription))
                 .ForMember(d => d.Publisher, o => o.MapFrom(s => s.Publisher!.Name))
                 .ForMember(d => d.Authors, o => o.MapFrom(s => s.Bookauthors.Select(a => $"{a.Author.FirstName} {a.Author.LastName}".Trim())))
-                .ForMember(d => d.Copies, o => o.MapFrom(s => s.Inventories));
+                .ForMember(d => d.Copies, o => o.MapFrom(s => s.Inventories.Where(i => i.Purchased == 0)));
         }
 
         private static Inventory? GetDisplayCopy(Shoppingcart cart)

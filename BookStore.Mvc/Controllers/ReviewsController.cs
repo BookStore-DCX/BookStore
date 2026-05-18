@@ -23,7 +23,7 @@ public class ReviewsController : Controller
     {
         if (!ModelState.IsValid)
         {
-            this.Error("Rating must be between 1 and 5.");
+            this.Error("Rating must be between 1 and 10.");
             return RedirectToAction("Details", "Books", new { id = model.Isbn });
         }
 
@@ -36,7 +36,7 @@ public class ReviewsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "RegisteredUser,Admin,StoreOwner")]
+    [Authorize(Roles = "RegisteredUser")]
     public async Task<IActionResult> Delete(string isbn, int reviewerId)
     {
         var result = await _reviewService.DeleteAsync(isbn, reviewerId);
