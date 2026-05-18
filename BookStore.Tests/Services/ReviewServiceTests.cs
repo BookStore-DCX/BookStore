@@ -256,7 +256,7 @@ namespace BookStore.Tests.Services
 
             _mockUnitOfWork.Setup(u => u.Users.GetByIdAsync(userId))
                 .ReturnsAsync(user);
-            _mockUnitOfWork.Setup(u => u.Reviews.GetReviewerByNameAsync(It.IsAny<string>()))
+            _mockUnitOfWork.Setup(u => u.Reviews.GetReviewerByIdAsync(userId))
                 .ThrowsAsync(new InvalidOperationException("Database connection failed"));
 
             await Assert.ThrowsAsync<InvalidOperationException>(

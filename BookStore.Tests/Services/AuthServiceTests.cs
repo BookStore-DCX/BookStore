@@ -5,6 +5,7 @@ using BookStore.Models;
 using BookStore.Repositories.Interfaces;
 using BookStore.Services.Implementations;
 using BookStore.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
 
@@ -17,6 +18,7 @@ namespace BookStore.Tests.Services
         private readonly Mock<IUnitOfWork> _uow = new();
         private readonly Mock<IJwtService> _jwt = new();
         private readonly Mock<IMapper> _mapper = new();
+        private readonly Mock<IConfiguration> _config = new();
 
         private AuthService CreateSvc() =>
             new(
@@ -24,7 +26,8 @@ namespace BookStore.Tests.Services
                 _userRepo.Object,
                 _uow.Object,
                 _jwt.Object,
-                _mapper.Object);
+                _mapper.Object,
+                _config.Object);
 
         [Fact]
         public async Task LoginAsync_ValidCredentials_ReturnsAuthResponseDto()
@@ -276,7 +279,7 @@ namespace BookStore.Tests.Services
 
             await CreateSvc().RegisterAsync(dto);
 
-            Assert.Equal(1, captured?.RoleNumber);
+            Assert.Equal(2, captured?.RoleNumber);
         }
     }
 }
