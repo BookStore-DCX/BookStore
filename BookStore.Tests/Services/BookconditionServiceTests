@@ -1,14 +1,13 @@
-﻿using AutoMapper;
-using Book.DTOs.BookCondition;
-using BookStore.Exceptions;
+using Xunit;
+using Moq;
+using AutoMapper;
+using BookStore.DTOs.BookCondition;
 using BookStore.Models;
 using BookStore.Repositories.Interfaces;
 using BookStore.Services.Implementations;
-using Moq;
-using System.Timers;
-using Xunit;
+using BookStore.Exceptions;
 
-namespace Book.Tests.Services
+namespace BookStore.Tests.Services
 {
     public class BookconditionServiceTests
     {
@@ -129,7 +128,7 @@ namespace Book.Tests.Services
             Assert.Equal(5, result.Ranks);
             Assert.Equal("Poor", result.Description);
         }
-
+        
 
         [Fact]
         public async Task GetConditionByRankAsync_WithInvalidRank_ThrowsNotFoundException()
